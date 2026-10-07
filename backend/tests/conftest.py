@@ -26,6 +26,14 @@ class StubScheduler:
 
 
 @pytest.fixture(autouse=True)
+def hermetic_llm(monkeypatch: pytest.MonkeyPatch) -> None:
+    """单测密闭性：无论本机 config.yaml 是否配置了真实 Key，测试内 LLM 一律走规则降级，绝不触网。"""
+    from app.llm.client import LLMClient
+
+    monkeypatch.setattr(LLMClient, "available", property(lambda self: False))
+
+
+@pytest.fixture(autouse=True)
 def isolated_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Iterator[Any]:
     """每个测试一个临时库；禁用自动开浏览器与启动刷新。"""
     monkeypatch.setenv("CONTEST_RADAR_DB", str(tmp_path / "test.db"))
