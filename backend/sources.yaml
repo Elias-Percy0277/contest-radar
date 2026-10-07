@@ -36,22 +36,21 @@ sources:
     name: CCF CCSP竞赛
     method: http
     parser: app.parsers.ccsp.CcspSource
-    enabled: false
+    enabled: true
     params:
       url: "https://www.ccf.org.cn/ccsp/"
   - id: ccf_cacc
     name: CCF算法能力大赛
-    method: http
+    method: playwright
     parser: app.parsers.cacc.CaccSource
-    enabled: false
+    enabled: true
     params:
       url: "https://cacc.ccf.org.cn/"
-      # 注意：该站实为 Vue SPA，纯 HTTP 拿不到列表（解析器会抛 SourceError 说明）；
-      # 启用前需把 method 升级为 playwright。
+      # 该站为 Vue SPA，2026-10 已升级为 Playwright 渲染方案。
   - id: ccf_cert
     name: CCF认证
     method: http
     parser: app.parsers.ccf_cert.CcfCertSource
-    enabled: false
+    enabled: true
     params:
       url: "https://www.ccf.org.cn/Activities/Certification/"
