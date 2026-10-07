@@ -1,0 +1,57 @@
+# 信息源清单 —— sources-crawler 维护，格式见 contest-radar/SPEC.md 第 6 节。
+# parser 字段为 importlib 可导入的 "模块.类名"；params 会原样传给 BaseSource.__init__。
+sources:
+  # ---------- 启用源（4 个，已实测） ----------
+  - id: ccf_csp
+    name: CCF CSP认证
+    method: http
+    parser: app.parsers.cspro.CsproSource
+    enabled: true
+    params:
+      url: "https://www.cspro.org/cms/show.action?code=publish_8ac21fad9d27f22a019f5944f2eb00e1&siteid=100000"
+      channel_id: "0000000103" # 通知公告栏目
+  - id: nowcoder
+    name: 牛客竞赛
+    method: http
+    parser: app.parsers.nowcoder.NowcoderSource
+    enabled: true
+    params:
+      url: "https://ac.nowcoder.com/acm/home"
+  - id: codeforces
+    name: Codeforces
+    method: api
+    parser: app.parsers.codeforces.CodeforcesSource
+    enabled: true
+    params:
+      url: "https://codeforces.com/api/contest.list"
+  - id: huawei
+    name: 华为云大赛
+    method: playwright
+    parser: app.parsers.huawei.HuaweiSource
+    enabled: true
+    params:
+      url: "https://competition.huaweicloud.com/"
+  # ---------- 候选源（默认停用，enabled=false） ----------
+  - id: ccf_ccsp
+    name: CCF CCSP竞赛
+    method: http
+    parser: app.parsers.ccsp.CcspSource
+    enabled: false
+    params:
+      url: "https://www.ccf.org.cn/ccsp/"
+  - id: ccf_cacc
+    name: CCF算法能力大赛
+    method: http
+    parser: app.parsers.cacc.CaccSource
+    enabled: false
+    params:
+      url: "https://cacc.ccf.org.cn/"
+      # 注意：该站实为 Vue SPA，纯 HTTP 拿不到列表（解析器会抛 SourceError 说明）；
+      # 启用前需把 method 升级为 playwright。
+  - id: ccf_cert
+    name: CCF认证
+    method: http
+    parser: app.parsers.ccf_cert.CcfCertSource
+    enabled: false
+    params:
+      url: "https://www.ccf.org.cn/Activities/Certification/"

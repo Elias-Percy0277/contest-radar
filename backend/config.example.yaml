@@ -1,0 +1,11 @@
+# 竞赛雷达 ContestRadar 后端配置示例
+# 运行时复制为 config.yaml（config.yaml 已被 gitignore），按需修改。
+# 未提供 config.yaml 时程序自动使用本文件的默认值。
+server: { host: 127.0.0.1, port: 8300 }
+fetch: { cache_hours: 6, concurrency: 3, timeout_seconds: 30, playwright_timeout_seconds: 60, retries: 2 }
+llm:
+  enabled: true
+  api_key: ""            # DeepSeek API Key；留空自动降级为规则模式
+  base_url: https://api.deepseek.com
+  model: deepseek-chat
+retention: { joined_grace_days: 7, unmarked_ended_days: 30, stale_unknown_days: 30 }

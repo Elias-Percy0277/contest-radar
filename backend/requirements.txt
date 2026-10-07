@@ -1,0 +1,27 @@
+# 竞赛雷达 ContestRadar 后端依赖（版本锁死，Python 3.11+）
+# 安装：pip install -r requirements.txt
+
+# --- Web 框架与服务器 ---
+fastapi==0.115.12
+uvicorn[standard]==0.34.0
+
+# --- 数据库（SQLite / SQLAlchemy 2.0）---
+sqlalchemy==2.0.40
+
+# --- 抓取（HTTP + HTML 解析）---
+httpx==0.28.1
+beautifulsoup4==4.13.3
+lxml==5.3.0
+
+# --- 配置文件 ---
+pyyaml==6.0.2
+
+# --- LLM（DeepSeek 兼容 OpenAI SDK）---
+openai==1.68.2
+
+# --- 抓取渲染（华为云源，首次部署需: playwright install chromium）---
+playwright==1.60.0
+
+# --- 测试 ---
+pytest==8.3.5
+pytest-asyncio==0.25.3

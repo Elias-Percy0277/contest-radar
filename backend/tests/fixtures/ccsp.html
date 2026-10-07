@@ -1,0 +1,1855 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  
+<meta charset="UTF-8">
+<meta name="viewport"
+  content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+<!-- css -->
+<link rel="shortcut icon" type="image/ico" href="/images/favicon.ico" />
+<link rel="stylesheet" href="/v3/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="/v3/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="/v3/css/v3-framework.css" type="text/css" />
+<link rel="stylesheet" href="/v3/css/v3-common.css" type="text/css" />
+<link rel="stylesheet" href="/css/swiper-3.4.2.min.css" />
+<link rel="stylesheet" href="/v3/css/ccfMember.css?v=1.0111" />
+
+<!-- js -->
+<script>
+  var frontAppContext = 'https://www.ccf.org.cn/ccf/';
+  var siteID = "122";
+</script>
+
+<script src="/v3/js/zcms_require.js" contextpath="https://www.ccf.org.cn/ccf/"></script>
+
+<script src="/v3/js/bootstrap.min.js"></script>
+<script>
+  if (isIE && ieVersion < 9 || isIE8) {
+    importJS('../v3/js/ie/html5shiv.js')
+    if (!isIE6 && !isIE7) {
+      importJS('../v3/js/ie/respond.min.js')
+    }
+    importJS('../v3/js/ie/excanvas.js')
+  }
+  if (/MSIE (6|7)\.0/.test(navigator.userAgent)) {
+    importCSS('../v3/css/bootstrap-ie6.css')
+    importJS('../v3/js/ie/bootstrap-ie6.js')
+  }
+  if (isIE && ieVersion < 9 || isIE8) {
+    importCSS('../v3/css/v3-site-ie.css')
+  }
+  if (inTouch) {
+    importJS('../v3/js/hammer.min.js')
+  }
+  importJS('../js/responsiveslides.js')
+</script>
+<script type="text/javascript" src="/v3/js/v3_common.js"></script>
+<script type="text/javascript" src="/v3/js/v3_site.js"></script>
+<script type="text/javascript" src="/js/jquery-select.js"></script>
+<script type="text/javascript" src="/v3/js/lib.js"></script>
+<script src="/js/swiper-3.4.2.jquery.min.js"></script>
+<script>
+  $(function () {
+    // Server.sendRequest("member/clickMyCCF", null, function (response) {
+    //   if (response.Status == 1) {
+    //     var vd = response.Prop3;
+    //     if (vd && vd != 'null' && vd > Date.parse(new Date())) {
+    //       $("#header_joinccf").hide();
+    //       $("#header_joinccf_m").hide();
+    //     } else {
+    //       $('#header_joinccf').attr("href", "https://web.ccf.org.cn/CCF/frame.action?menuShowFlag=B00021");
+    //       $("#header_joinccf").text("会员缴费");
+    //       $('#header_joinccf_m').attr("href", "href", "https://web.ccf.org.cn/CCF/reg_phone.html");
+    //       $("#header_joinccf_m").text("会员缴费");
+    //     }
+    //     $('#header_login').attr("href", "https://ccflinkapp.ccf.org.cn/pc/p/myNew");
+    //     $("#header_login").text("我的主页");
+    //     $('#mlg').attr("href", "https://ccflinkapp.ccf.org.cn/pc/p/myNew");
+
+    //     $("#header_logout").show();
+
+    //   } else {
+    //     $('#mlg').attr("href", "javascript:memberLogin();");
+    //     $("#header_login").text("登录");
+    //     $("#header_joinccf").show();
+    //     $("#header_joinccf_m").show();
+    //     $("#header_logout").hide();
+    //   }
+    // });
+    Server.sendRequest("member/clickMyCCF", null, function (response) {
+      if (response.Status == 1) {
+        $(".member-logined").removeClass("hide");
+        var name = response.MemberName;
+        var imgSrc = response.LogoFile;
+        $(".kjlt-header .userbox").attr("href", "https://ccflinkapp.ccf.org.cn/pc/p/myNew");
+        $(".kjlt-header .userbox .name").text(name);
+        if(!imgSrc){
+          imgSrc = '/images/ccf-member/icon16.png'
+        }
+        $(".kjlt-header .userbox img").attr({ "src": imgSrc });
+      } else {
+        /* 未登录 */
+        $(".member-login").removeClass("hide");
+        $('#header_login').attr("href", "javascript:memberLogin();");
+      }
+    });
+  });
+
+  function memberLogin() {
+    var curURL = window.location.href;
+    window.location.href = frontAppContext + 'sso/login?SiteID=' + siteID + '&Refer=' + curURL;
+  }
+
+  function memberLoginOut() {
+    window.location.href = frontAppContext + 'logout';
+  }
+</script>
+<!--[if lt IE 10]><script src="${prefix("js/respond.src.js")}"></script><![endif]-->
+   
+<meta charset="UTF-8">
+<meta name="viewport"
+  content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+<!-- css -->
+<link rel="shortcut icon" type="image/ico" href="/images/favicon.ico" />
+<link rel="stylesheet" href="/v3/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="/v3/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="/v3/css/v3-framework.css" type="text/css" />
+<link rel="stylesheet" href="/v3/css/v3-common.css" type="text/css" />
+<link rel="stylesheet" href="/css/swiper-3.4.2.min.css" />
+<link rel="stylesheet" href="/v3/css/kjlt.css?v=1.0" />
+
+<!-- js -->
+<script>
+  var frontAppContext = 'https://www.ccf.org.cn/ccf/';
+  var siteID = "122";
+</script>
+
+<script src="/v3/js/zcms_require.js" contextpath="https://www.ccf.org.cn/ccf/"></script>
+
+<script src="/v3/js/bootstrap.min.js"></script>
+<script>
+  if (isIE && ieVersion < 9 || isIE8) {
+    importJS('../v3/js/ie/html5shiv.js')
+    if (!isIE6 && !isIE7) {
+      importJS('../v3/js/ie/respond.min.js')
+    }
+    importJS('../v3/js/ie/excanvas.js')
+  }
+  if (/MSIE (6|7)\.0/.test(navigator.userAgent)) {
+    importCSS('../v3/css/bootstrap-ie6.css')
+    importJS('../v3/js/ie/bootstrap-ie6.js')
+  }
+  if (isIE && ieVersion < 9 || isIE8) {
+    importCSS('../v3/css/v3-site-ie.css')
+  }
+  if (inTouch) {
+    importJS('../v3/js/hammer.min.js')
+  }
+  importJS('../js/responsiveslides.js')
+</script>
+<script type="text/javascript" src="/v3/js/v3_common.js"></script>
+<script type="text/javascript" src="/v3/js/v3_site.js"></script>
+<script type="text/javascript" src="/js/jquery-select.js"></script>
+<script type="text/javascript" src="/v3/js/lib.js"></script>
+<script src="/js/swiper-3.4.2.jquery.min.js"></script>
+
+
+    <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+  $(function(){// 在页面加载完毕后执行，防止因jquery找不到造成手机首次打开错误
+    setTimeout(function(){
+    var imgUrl = "https://www.ccf.org.cn/images/images/logo.png";//默认图片
+    var desc="";
+     if($("#content img,.article img").size()>0){
+        imgUrl=$("#content img,.article img")[0].src;
+    };
+      
+    if($(".sr_face_img img").size()>0){
+        imgUrl=$(".sr_face_img img")[0].src;
+    };
+    
+    if($("#ArticleUserLogoFile").size()>0){
+        imgUrl=$("#ArticleUserLogoFile")[0].src;
+    };
+    if($("#logofile").val()!=''&&$("#logofile").val()!=undefined){
+     	imgUrl=$("#logofile").val();
+    };
+    if($("#wximg").val()!=''&&$("#wximg").val()!=undefined){
+     	imgUrl=$("#wximg").val();
+    };
+    if($("head").children("[name='description']").attr("content")!=""){
+      desc=$("head").children("[name='description']").attr("content");
+    };
+    if($("#ArticleUserIntr").size()>0){
+      desc=$("#ArticleUserIntr").text().trim();
+    };
+    if($("#Summary").val()!=''&&$("#Summary").val()!=undefined){
+		desc=$("#Summary").val();
+    };
+    if(desc == undefined) {
+        desc = "";
+    }
+     var param = {
+                "href":window.location.href,
+                "imgPath":imgUrl,
+                "title":$("title").text(),
+                "desc":desc,
+                "siteID":"122"
+            }
+     Share(param);
+    },2000)
+  })
+</script>
+<script src="/js/share.js" type="text/javascript"></script> 
+
+
+
+
+<script>
+  $(function () {
+    // Server.sendRequest("member/clickMyCCF", null, function (response) {
+    //   if (response.Status == 1) {
+    //     var vd = response.Prop3;
+    //     if (vd && vd != 'null' && vd > Date.parse(new Date())) {
+    //       $("#header_joinccf").hide();
+    //       $("#header_joinccf_m").hide();
+    //     } else {
+    //       $('#header_joinccf').attr("href", "https://web.ccf.org.cn/CCF/frame.action?menuShowFlag=B00021");
+    //       $("#header_joinccf").text("会员缴费");
+    //       $('#header_joinccf_m').attr("href", "href", "https://web.ccf.org.cn/CCF/reg_phone.html");
+    //       $("#header_joinccf_m").text("会员缴费");
+    //     }
+    //     $('#header_login').attr("href", "https://ccflinkapp.ccf.org.cn/pc/p/myNew");
+    //     $("#header_login").text("我的主页");
+    //     $('#mlg').attr("href", "https://ccflinkapp.ccf.org.cn/pc/p/myNew");
+
+    //     $("#header_logout").show();
+
+    //   } else {
+    //     $('#mlg').attr("href", "javascript:memberLogin();");
+    //     $("#header_login").text("登录");
+    //     $("#header_joinccf").show();
+    //     $("#header_joinccf_m").show();
+    //     $("#header_logout").hide();
+    //   }
+    // });
+    Server.sendRequest("member/clickMyCCF", null, function (response) {
+      if (response.Status == 1) {
+        $(".member-logined").removeClass("hide");
+        var name = response.MemberName;
+        var imgSrc = response.LogoFile;
+        $(".kjlt-header .userbox").attr("href", "https://ccflinkapp.ccf.org.cn/pc/p/myNew");
+        $(".kjlt-header .userbox .name").text(name);
+        //$(".kjlt-header .userbox img").attr({ "src": imgSrc, 'onerror': 'this.src="/images/kjlt/default.png",this.onerror=null' });
+        	if(!imgSrc){
+          imgSrc = '/images/kjlt/default.png'
+        }
+        $(".kjlt-header .userbox img").attr({ "src": imgSrc });
+      } else {
+        /* 未登录 */
+        $(".member-login").removeClass("hide");
+        $('#header_login').attr("href", "javascript:memberLogin();");
+      }
+    });
+  });
+
+  function memberLogin() {
+    var curURL = window.location.href;
+    window.location.href = frontAppContext + 'sso/login?SiteID=' + siteID + '&Refer=' + curURL;
+  }
+
+  function memberLoginOut() {
+    window.location.href = frontAppContext + 'logout';
+  }
+</script>
+<!--[if lt IE 10]><script src="${prefix("js/respond.src.js")}"></script><![endif]-->
+
+
+
+
+
+
+
+
+
+
+
+  <title>CCSP - 中国计算机学会</title>
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <link rel="stylesheet" href="/css/jquery.mCustomScrollbar.css">
+</head>
+
+<body class="ccf_index">
+  
+
+<div class="kjlt-header">
+<style>
+  @media (max-width: 768px) {
+  .kjlt-header .head-con .logofont{line-height: 40px;DISPLAY: BLOCK;FLOAT: RIGHT;
+    WIDTH: 60%;
+    PADDING-RIGHT: 10PX;
+}}
+  .kjlt-header .head-top .r-btn a {    height: 40.1px!important;}
+  
+ 
+</style>
+  
+  
+  <div class="head-top">
+    <div class="container" style="background-color:#144aac">
+      <div class="row clearfix">
+        <div class="r-btn fr">
+          <a class="join member-login hide" href="https://web.ccf.org.cn/CCF/regTo.action?flag=0&amp;url=" target="_blank">加入CCF</a>
+          <a class="login member-login hide" id="header_login">登录</a>
+          <a class="userbox member-logined hide" target="_blank">
+            
+            <span class="name" style="    font-size: 18px;
+    margin-top: 0px;"></span>
+          </a>
+          <a class="join member-logined hide" onclick="memberLoginOut();">退出</a>
+          <!-- <a class="member-login pointer" target="_blank">登录1</a> -->
+           &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        <div class="link fr">
+           <a href="https://www.ccf.org.cn/" target="_blank">CCF官网</a>
+          &nbsp;&nbsp;|&nbsp;&nbsp;
+          <a href="https://www.ccf.org.cn/Map/" target="_blank">站点地图</a>
+          &nbsp;&nbsp;|&nbsp;&nbsp;
+          <a href="https://www.ccf.org.cn/About_CCF/Governance/Secretariat/" target="_blank">联系我们</a>
+          &nbsp;&nbsp;|&nbsp;&nbsp;
+          <a href="https://www.ccf.org.cn/FAQ/Membership/" target="_blank">常见问题</a>
+         
+          
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="head-con">
+    <div class="container " >
+      <div class="row clearfix">
+        <div class="logo">
+      <a style="display:block;float:left;" href="https://www.ccf.org.cn/" target="_blank"><img src="/images/images/2023ccf.png" width="113px" alt="logo"></a>
+          <a style="display:block;float:left;margin-left: 5px;
+    line-height: 80px;" href="https://www.ccf.org.cn/ccsp/" target="_blank"><img src="/images/ccsp2023.png" alt="logo"></a>
+        </div>
+              
+              
+        
+        <div class="fr searchbox">
+          <form id="LuceneSearchFrom" name="LuceneSearchFrom" method="POST" action="https://www.ccf.org.cn/ccf/search/result">
+            <input type="text" class="search-ipt" id="Query" name="Query" placeholder="CCF创建60周年"
+              autocomplete="off" />
+            <input type="button" class="search-btn" onclick="queryLucene()" />
+            <input type="hidden" id="SiteID" name="SiteID" value="122" />
+            <input type="hidden" id="SearchType" name="SearchType" value="2" />
+            <input type="hidden" id="AllSite" name="AllSite" />
+            <input type="hidden" id="TitleOnly" name="TitleOnly" value="Y" />
+            <input type="hidden" id="Sort" name="Sort" value="PUBLISHDATE" />
+            <input type="hidden" id="usingSynonym" name="usingSynonym" />
+            <input type="hidden" id="PageIndex" name="PageIndex" />
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="head-menu">
+    <div class="container swiper-menu">
+      <div class="swiper-wrapper">
+        
+          <div class="swiper-slide">
+            <a href="/ccsp/">首页</a>
+          </div>
+          
+            
+              <div class="swiper-slide">
+                <a href="/ccsp/About_CCSP/">关于竞赛</a>
+                
+                  <div class="slide-childbox">
+                    
+                  </div>
+                
+              </div>
+              <div class="swiper-slide">
+                <a href="/ccsp/jszc/">竞赛章程</a>
+                
+                  <div class="slide-childbox">
+                    
+                  </div>
+                
+              </div>
+              <div class="swiper-slide">
+                <a href="/ccsp/Organizations/">组织机构</a>
+                
+                  <div class="slide-childbox">
+                    
+                  </div>
+                
+              </div>
+              <div class="swiper-slide">
+                <a href="/ccsp/tzgg/">通知公告</a>
+                
+                  <div class="slide-childbox">
+                    
+                  </div>
+                
+              </div>
+              <div class="swiper-slide">
+                <a href="/ccsp/Bulletin/">竞赛动态</a>
+                
+                  <div class="slide-childbox">
+                    
+                  </div>
+                
+              </div>
+              <div class="swiper-slide">
+                <a href="https://csp.ccf.org.cn/csp/index.action?examType=2">报名参赛</a>
+                
+                  <div class="slide-childbox">
+                    
+                  </div>
+                
+              </div>
+              <div class="swiper-slide">
+                <a href="/ccsp/bkzq/">备考专区</a>
+                
+                  <div class="slide-childbox">
+                    
+                      <div class="slide-child">
+                        <a href="/ccsp/bkzq/zlfx/">经验分享-初赛CSP</a>
+                      </div>
+                      <div class="slide-child">
+                        <a href="/ccsp/bkzq/jyfx-jsccsp/">经验分享-决赛CCSP</a>
+                      </div>
+                      <div class="slide-child">
+                        <a href="/ccsp/bkzq/zlxz/">资料下载</a>
+                      </div>
+                  </div>
+                
+              </div>
+              <div class="swiper-slide">
+                <a href="/ccsp/Supporting_Organizations/">合作伙伴</a>
+                
+                  <div class="slide-childbox">
+                    
+                  </div>
+                
+              </div>
+              <div class="swiper-slide">
+                <a href="/ccsp/lxwm/">联系我们</a>
+                
+                  <div class="slide-childbox">
+                    
+                  </div>
+                
+              </div>
+          
+        
+      </div>
+      <div class="swiper-menu-prev swiper-menu-btn">
+        <img src="/images/ccf-member/icon15.png"/>
+      </div>
+      <div class="swiper-menu-next swiper-menu-btn">
+        <img src="/images/ccf-member/icon11.png"/>
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  
+  
+  <script>
+    var SwiperMenu = new Swiper('.swiper-menu', {
+      slidesPerView: 10,
+      simulateTouch: false,
+      prevButton: $(".swiper-menu-prev"),
+      nextButton: $(".swiper-menu-next"),
+      breakpoints: {
+        992: {
+          slidesPerView: 7,
+          simulateTouch: true,
+        },
+        768: {
+          slidesPerView: 6,
+          simulateTouch: true,
+        },
+        480: {
+          slidesPerView: 4,
+          simulateTouch: true,
+        }
+      }
+    })
+
+
+    function queryLucene() {
+      toSearch($V("Query"));
+    }
+    $("#Query").keydown(function (event) {
+      if (event.keyCode == 13) {
+        toSearch($V("Query"));
+      }
+    });
+
+    function toSearch(query) {
+      if (query == null || query == "") {
+        query = "CCF创建60周年";
+      }
+      $S("Query", query);
+      $("#LuceneSearchFrom").submit();
+    }
+  </script>
+  <div class="container container-1230">
+    <div class="row topswiper">
+      <div class="col-xs-12 col-md-9">
+        <div class="swiper swiper-container">
+          <div class="swiper-wrapper">
+            
+              
+              
+                <div class="swiper-slide img-block">
+                  <a href="/ccsp/tzgg/2026-09-09/931080.shtml" target="_blank" class="imglink">
+                    <img src="/upload/resources/image/2026/09/10/0d383735928806b90850ed7559e1e052_900x380c.jpg" alt="2026&#32;CCF&#32;CCSP竞赛将于10月21~22日举办，9月9日开启报名" class="img">
+                    <div class="info" title='2026&#32;CCF&#32;CCSP竞赛将于10月21~22日举办，9月9日开启报名'>
+                      <div class="summary tag"></div>
+                      <div class="name ellipsis">2026&#32;CCF&#32;CCSP竞赛将于10月21~22日举办，9月9日开启报名</div>
+                    </div>
+                  </a>
+                </div>
+            
+          </div>
+          <div class="swiper-page text-center">
+            
+              <span class="on">1</span>
+            
+          </div>
+          <div class="swiper-news-prev swiper-button-prev news-btn swiper-button-white"></div>
+          <div class="swiper-news-next swiper-button-next news-btn swiper-button-white"></div>
+          <!-- <div class="news-dot text-right"></div> -->
+        </div>
+        <div class="news-list">
+          
+            <div class="title d-flex">
+              <div class="d-grow">竞赛动态</div>
+              <a href="https://www.ccf.org.cn/ccsp/Bulletin/" class="d-shrink">
+                <img src="/images/ccf-member/more_grey.png" alt=""></a>
+            </div>
+            <STYLE>
+             .ccf_index .news-list .item .info a{
+             overflow: hidden;
+              height: 48px;
+              }
+            </STYLE>
+           
+            <div class="list row">
+              
+                <div class="item col-xs-12 col-md-4 col-sm-6">
+                  <div class="d-flex">
+                    
+                    <div class="d-grow info" style="padding: 11px 15px;">
+                      <a href="/ccsp/Bulletin/2026-09-16/932667.shtml" class="name line2 font16"
+                        target="_blank">2027年度CSP代言人招募中，2026&#32;CCF&#32;CCSP竞赛现场揭秘！</a>
+                      <div class="time">2026-09-16</div>
+                      
+                    </div>
+                  </div>
+                </div>
+                <div class="item col-xs-12 col-md-4 col-sm-6">
+                  <div class="d-flex">
+                    
+                    <div class="d-grow info" style="padding: 11px 15px;">
+                      <a href="/ccsp/Bulletin/2026-09-14/932173.shtml" class="name line2 font16"
+                        target="_blank">关于调整2026&#32;CCF&#32;CCSP竞赛选手可携带资料规定的通知</a>
+                      <div class="time">2026-09-14</div>
+                      
+                    </div>
+                  </div>
+                </div>
+                <div class="item col-xs-12 col-md-4 col-sm-6">
+                  <div class="d-flex">
+                    
+                      <div class="d-shrink img-block">
+                        <a href="/ccsp/Bulletin/2026-09-09/931089.shtml" target="_blank">
+                          <img src="/upload/resources/image/2026/09/10/1952bd9bd19847ca40d52604a7556f92_214x200c.jpg" alt=""></a>
+                      </div>
+                    
+                    <div class="d-grow info" style="padding: 11px 15px;">
+                      <a href="/ccsp/Bulletin/2026-09-09/931089.shtml" class="name line2 font16"
+                        target="_blank">2026&#32;CCF&#32;CCSP竞赛将于10月21~22日举办，9月9日开启报名</a>
+                      <div class="time">2026-09-09</div>
+                      
+                    </div>
+                  </div>
+                </div>
+                <div class="item col-xs-12 col-md-4 col-sm-6">
+                  <div class="d-flex">
+                    
+                      <div class="d-shrink img-block">
+                        <a href="/ccsp/Bulletin/2025-11-28/853681.shtml" target="_blank">
+                          <img src="/upload/resources/image/2025/11/28/dbe13285b119fed5f3e3cdd286776b52_214x200c.png" alt=""></a>
+                      </div>
+                    
+                    <div class="d-grow info" style="padding: 11px 15px;">
+                      <a href="/ccsp/Bulletin/2025-11-28/853681.shtml" class="name line2 font16"
+                        target="_blank">CCSP金奖说&#32;|&#32;哈尔滨工业大学丁文涛：始终热爱、始终成长</a>
+                      <div class="time">2025-11-28</div>
+                      
+                    </div>
+                  </div>
+                </div>
+                <div class="item col-xs-12 col-md-4 col-sm-6">
+                  <div class="d-flex">
+                    
+                      <div class="d-shrink img-block">
+                        <a href="/ccsp/Bulletin/2025-11-28/853679.shtml" target="_blank">
+                          <img src="/upload/resources/image/2025/11/28/fc9341052be65bc370b0e63b5fbb8a3c_214x200c.jpg" alt=""></a>
+                      </div>
+                    
+                    <div class="d-grow info" style="padding: 11px 15px;">
+                      <a href="/ccsp/Bulletin/2025-11-28/853679.shtml" class="name line2 font16"
+                        target="_blank">CCSP金奖说&#32;|&#32;北京建筑大学朱智睿：CCSP参赛分享</a>
+                      <div class="time">2025-11-28</div>
+                      
+                    </div>
+                  </div>
+                </div>
+                <div class="item col-xs-12 col-md-4 col-sm-6">
+                  <div class="d-flex">
+                    
+                      <div class="d-shrink img-block">
+                        <a href="/ccsp/Bulletin/2025-11-13/853051.shtml" target="_blank">
+                          <img src="/upload/resources/image/2025/11/13/5d1bbe2caaeffa48daf0f3c13a8124ec_214x200c.jpg" alt=""></a>
+                      </div>
+                    
+                    <div class="d-grow info" style="padding: 11px 15px;">
+                      <a href="/ccsp/Bulletin/2025-11-13/853051.shtml" class="name line2 font16"
+                        target="_blank">CCSP冠军说&#32;|&#32;中山大学陈景泰：保持热爱，保持好奇</a>
+                      <div class="time">2025-11-13</div>
+                      
+                    </div>
+                  </div>
+                </div>
+                <div class="item col-xs-12 col-md-4 col-sm-6">
+                  <div class="d-flex">
+                    
+                      <div class="d-shrink img-block">
+                        <a href="/ccsp/Bulletin/2025-10-28/850502.shtml" target="_blank">
+                          <img src="/upload/resources/image/2025/10/28/5e19b2ce6bf7a02777c628427a44f34a_214x200c.jpg" alt=""></a>
+                      </div>
+                    
+                    <div class="d-grow info" style="padding: 11px 15px;">
+                      <a href="/ccsp/Bulletin/2025-10-28/850502.shtml" class="name line2 font16"
+                        target="_blank">中山大学陈景泰荣获冠军，清华大学获高校团体第一&#32;|&#32;CCSP2025</a>
+                      <div class="time">2025-10-28</div>
+                      
+                    </div>
+                  </div>
+                </div>
+                <div class="item col-xs-12 col-md-4 col-sm-6">
+                  <div class="d-flex">
+                    
+                      <div class="d-shrink img-block">
+                        <a href="/ccsp/Bulletin/2025-10-17/849880.shtml" target="_blank">
+                          <img src="/upload/resources/image/2025/10/17/ca53d8c1a56e100ae4a27c846cd7e4a4_214x200c.jpg" alt=""></a>
+                      </div>
+                    
+                    <div class="d-grow info" style="padding: 11px 15px;">
+                      <a href="/ccsp/Bulletin/2025-10-17/849880.shtml" class="name line2 font16"
+                        target="_blank">2025&#32;CCF&#32;CCSP竞赛手册发布，10月22~23日哈尔滨见！</a>
+                      <div class="time">2025-10-17</div>
+                      
+                    </div>
+                  </div>
+                </div>
+                <div class="item col-xs-12 col-md-4 col-sm-6">
+                  <div class="d-flex">
+                    
+                      <div class="d-shrink img-block">
+                        <a href="/ccsp/Bulletin/2025-09-22/848933.shtml" target="_blank">
+                          <img src="/upload/resources/image/2025/09/22/5663780630e7a539dce0bc1137c5fa30_214x200c.jpg" alt=""></a>
+                      </div>
+                    
+                    <div class="d-grow info" style="padding: 11px 15px;">
+                      <a href="/ccsp/Bulletin/2025-09-22/848933.shtml" class="name line2 font16"
+                        target="_blank">2025&#32;CCF&#32;CCSP竞赛备考资料请查收！</a>
+                      <div class="time">2025-09-22</div>
+                      
+                    </div>
+                  </div>
+                </div>
+            </div>
+          
+        </div>
+
+      </div>
+      <div class="col-xs-12 col-md-3 ">
+        <div class="active-date">
+          <div class="title d-flex">
+            <div class="d-grow">活动预告</div>
+                        
+                          <a href="/ccsp/hdyg/" class="d-shrink"><img src="/images/ccf-member/more_grey.png" alt=""></a>
+            
+                    
+          </div>
+          <div class="active-con">
+            <div class="active-nav clearfix">
+              <div class="data-item fl">
+                <div class="show-name">
+                  <span class="yearnum">2026年</span>
+                  <img src="/images/ccf-member/icon6.png" />
+                </div>
+                <div class="data-list yearDateList"></div>
+              </div>
+              <div class="data-item fr">
+                <div class="show-name">
+                  <span class="monthnum">10月</span>
+                  <img src="/images/ccf-member/icon6.png" />
+                </div>
+                <div class="data-list MonthDateList">
+                  <div class="item">01月</div>
+                  <div class="item">02月</div>
+                  <div class="item">03月</div>
+                  <div class="item">04月</div>
+                  <div class="item">05月</div>
+                  <div class="item">06月</div>
+                  <div class="item">07月</div>
+                  <div class="item">08月</div>
+                  <div class="item">09月</div>
+                  <div class="item">10月</div>
+                  <div class="item">11月</div>
+                  <div class="item">12月</div>
+                </div>
+              </div>
+            </div>
+            <div class="active-list swiper-active">
+              <div class="swiper-wrapper"></div>
+              <div class="monthTem">
+                <template>
+                  <div class="mon-box swiper-slide date-{data.curYear}" attr="{data.curYear}">
+                    {data.curMon}月
+                  </div>
+                </template>
+              </div>
+              <div class="sildeTem">
+                <template>
+                  <div class="thing-box ease-animation swiper-slide {data.curTimeClass}" attr="{data.curYear}">
+                    <a href="{data.linkUrl}" target="_blank">
+                      <div class="thing-time ease-animation1">
+                        {data.curMon}-{data.curDay}
+                        <span class="today fr">Today</span>
+                      </div>
+                      <div class="thing-name ellipsis ease-animation1" title="{data.name}">
+                        {data.name}
+                      </div>
+                    </a>
+                  </div>
+                </template>
+              </div>
+
+              <!-- <div class="swiper-scrollbar"></div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+     
+     <div class="b_title text-center">
+      
+    </div>
+          <!-- 广告位 -->
+      <div class="row advbox1 hidden-xs hide">
+        
+        
+        <div class="col-md-4">
+          <div class="advbox">
+            <!-- <a>
+              <img src="${prefix("images/kjlt/adv2.png")}" />
+            </a> -->
+            <span id='apjs_342'></span><script language='javascript' src='/upload/js/kjltsy2/342.js'></script>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="advbox">
+            <!-- <a>
+              <img src="${prefix("images/kjlt/adv2.png")}" />
+            </a> -->
+            <span id='apjs_352'></span><script language='javascript' src='/upload/js/kjltsy3/352.js'></script>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="advbox">
+            <!-- <a>
+              <img src="${prefix("images/kjlt/adv2.png")}" />
+            </a> -->
+            <span id='apjs_353'></span><script language='javascript' src='/upload/js/kjltsy4/353.js'></script>
+          </div>
+        </div>
+      </div>
+      <!-- 广告位 -->
+    
+     <!-- 学术活动 -->
+      
+        <div class="learnbox hide">
+          <div class="big-learn">
+            <div class="swiper-wrapper">
+              
+                <div class="swiper-slide">
+                  <div class="fl leftbox img-block">
+                    <a href="/CCF_BC/popular_science/2022-08-17/768166.shtml" target="_blank">
+                      <img src="/upload/resources/image/2022/08/17/203030_1280x720c.jpg" />
+                    </a>
+                  </div>
+                  <div class="fr right-con">
+                    <div class="pub-title clearfix">
+                      <div class="fl cat-title">
+                        <span class="blue">科普</span>&研学
+                      </div>
+                      <a class="fr" href="/CCF_BC/popular_science/" target="_blank">
+                        <img src="/images/kjlt/icon5.png" />
+                      </a>
+                    </div>
+                    <div class="big-info">
+                      <div class="name clearfix">
+                        <a class="ellipsis fl" href="/CCF_BC/popular_science/2022-08-17/768166.shtml" target="_blank" title="CCF计算机科普展厅">
+                          CCF计算机科普展厅
+                        </a>
+                      </div>
+                      <div class="con line2">
+                        CCF计算机科普展厅面积近600平米，位于CCF业务总部学术交流中心一楼，是由CCF众多专家共同精心打造的面向全社会尤其是广大青少年群体的科普基地。科普展...
+                      </div>
+                      <div class="time">
+                        08-17
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="fl leftbox img-block">
+                    <a href="/CCF_BC/popular_science/2022-03-09/763206.shtml" target="_blank">
+                      <img src="/upload/resources/image/2022/03/09/186641_1280x720c.jpg" />
+                    </a>
+                  </div>
+                  <div class="fr right-con">
+                    <div class="pub-title clearfix">
+                      <div class="fl cat-title">
+                        <span class="blue">科普</span>&研学
+                      </div>
+                      <a class="fr" href="/CCF_BC/popular_science/" target="_blank">
+                        <img src="/images/kjlt/icon5.png" />
+                      </a>
+                    </div>
+                    <div class="big-info">
+                      <div class="name clearfix">
+                        <a class="ellipsis fl" href="/CCF_BC/popular_science/2022-03-09/763206.shtml" target="_blank" title="CCF业务总部科普基地即将落成开放，现向全体会员征集展品！">
+                          CCF业务总部科普基地即将落成开放，现向全体会员征集展品！
+                        </a>
+                      </div>
+                      <div class="con line2">
+                        CCF业务总部&amp;学术交流中心即将于今年五月份对外运营，全新的青少年科普基地也将落成并面向公众开放。基地运营方向是“展教研融合，全方位科普”。
+                      </div>
+                      <div class="time">
+                        03-09
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <div class="small-learnbox">
+            <div class="small-learn">
+              <div class="swiper-wrapper">
+                
+                  <div class="swiper-slide img-block">
+                    <a href="/CCF_BC/popular_science/2022-08-17/768166.shtml" target="_blank">
+                      <img src="/upload/resources/image/2022/08/17/203030_510x288c.jpg" />
+                      <div class="font ellipsis" title="CCF计算机科普展厅">
+                        CCF计算机科普展厅
+                      </div>
+                    </a>
+                  </div>
+                  <div class="swiper-slide img-block">
+                    <a href="/CCF_BC/popular_science/2022-03-09/763206.shtml" target="_blank">
+                      <img src="/upload/resources/image/2022/03/09/186641_510x288c.jpg" />
+                      <div class="font ellipsis" title="CCF业务总部科普基地即将落成开放，现向全体会员征集展品！">
+                        CCF业务总部科普基地即将落成开放，现向全体会员征集展品！
+                      </div>
+                    </a>
+                  </div>
+              </div>
+              <div class="swiper-learn-btn noselect swiper-learn-prev">
+                <img src="/images/kjlt/icon14.png" />
+              </div>
+              <div class="swiper-learn-btn noselect swiper-learn-next">
+                <img src="/images/kjlt/icon15.png" />
+              </div>
+            </div>
+          </div>
+        </div>
+      
+      <!-- 学术活动 -->
+
+    
+    
+    
+    
+    
+      <!-- 设施介绍begin -->    
+    <div class="b_title text-center hide">
+      <span>
+        <b>会议设施及周边环境</b><br />
+        <span class="intro">Facilities & Environment</span>
+      </span>
+    </div>
+    
+            <div class="exclusive-box hide" style="height:100%">
+        <div class="exclusive-img">
+          <div class="swiper-wrapper">
+            
+              <div class="swiper-slide img-block">
+                <a href="/ccsp/2021-12-23/751968.shtml" target="_blank">
+                  <img src="/upload/resources/image/2021/12/23/180861_1200x600c.png" />
+                  <div class="fontbox hide">
+                    <div class="ellipsis name">2021CCSP全国赛及分赛在深圳及各地举办，清华大学王逸松荣获全国赛总冠军</div>
+                    <div class="line3 info">
+                      2021CCF&#32;CCSP竞赛于12月15日深圳大学及各认证点高校举办，共有67所高校的751位选手参赛。全国赛金奖冠军是清华大学的王逸松，清华大学陈雨昕、深圳大学杨熙全分获第二和第三名。清华大学、华中科技大学、中山大学等...
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="swiper-slide img-block">
+                <a href="/ccsp/2020-10-26/710525.shtml" target="_blank">
+                  <img src="/upload/resources/image/2020/10/26/136715_1200x600c.jpg" />
+                  <div class="fontbox hide">
+                    <div class="ellipsis name">西安交大王之坤摘得金奖桂冠，浙大团体第一，1016名高手同台竞技CCSP2020&#32;</div>
+                    <div class="line3 info">
+                      2020&#32;CCF大学生计算机系统与程序设计竞赛（CCSP）于10月17日在全国的64所CSP认证点高校举办，来自全国67所高校的1016名选手参赛。西安交通大学王之坤获得冠军。
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="swiper-slide img-block">
+                <a href="/ccsp/2019-12-01/672560.shtml" target="_blank">
+                  <img src="/upload/resources/image/2019/11/27/107927_1200x600c.jpg" />
+                  <div class="fontbox hide">
+                    <div class="ellipsis name">百里挑一，461位高手角逐CCSP，多家企业探问人才去向</div>
+                    <div class="line3 info">
+                      
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="swiper-slide img-block">
+                <a href="/ccsp/2018-10-31/653616.shtml" target="_blank">
+                  <img src="/upload/resources/image/2018/10/31/89096_1200x600c.jpg" />
+                  <div class="fontbox hide">
+                    <div class="ellipsis name">2018&#32;CCF&#32;CCSP竞赛获奖榜单</div>
+                    <div class="line3 info">
+                      
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="swiper-slide img-block">
+                <a href="/ccsp/2018-10-31/653614.shtml" target="_blank">
+                  <img src="/upload/resources/image/2018/10/31/89093_1200x600c.jpg" />
+                  <div class="fontbox hide">
+                    <div class="ellipsis name">474位参赛者历经12小时鏖战，“知乎杯”2018CCSP颁奖会颁出最终奖项</div>
+                    <div class="line3 info">
+                      
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="swiper-slide img-block">
+                <a href="/ccsp/2017-11-21/619908.shtml" target="_blank">
+                  <img src="/upload/resources/image/2017/11/21/48256_1200x600c.png" />
+                  <div class="fontbox hide">
+                    <div class="ellipsis name">CCF&#32;CCSP&#32;2017高校前30名排行榜</div>
+                    <div class="line3 info">
+                      CCF&#32;CCSP&#32;2017前30名高校&#32;
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="swiper-slide img-block">
+                <a href="/ccsp/2017-10-28/618642.shtml" target="_blank">
+                  <img src="/upload/resources/image/2017/11/15/47979_1200x600c.png" />
+                  <div class="fontbox hide">
+                    <div class="ellipsis name">2017&#32;CCF大学生计算机系统与程序设计竞赛及颁奖会在福州成功举办</div>
+                    <div class="line3 info">
+                      CCF大学生计算机系统与程序设计竞赛（CCSP）及颁奖会于10月26~27日在福州成功举办。本次竞赛由中国计算机学会（CCF）主办，福建师范大学承办，福州大学协办。来自全国53所高校的404名大学生计算机高手汇聚在一起，进...
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="swiper-slide img-block">
+                <a href="/ccsp/2017-08-29/604207.shtml" target="_blank">
+                  <img src="/upload/resources/image/2017/08/30/36623_1200x600c.jpg" />
+                  <div class="fontbox hide">
+                    <div class="ellipsis name">CCF&#32;CCSP&#32;2016获奖者排行榜&#32;</div>
+                    <div class="line3 info">
+                      
+                    </div>
+                  </div>
+                </a>
+              </div>
+          </div>
+        </div>
+        <div class="exclusive-fontbox">
+          <div class="exclusive-font">
+            <div class="swiper-wrapper">
+              
+                <div class="swiper-slide">
+                  <div class="font ellipsis" title="2021CCSP全国赛及分赛在深圳及各地举办，清华大学王逸松荣获全国赛总冠军">2021CCSP全国赛及分赛在深圳及各地举办，清华大学王逸松荣获全国赛总冠军</div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="font ellipsis" title="西安交大王之坤摘得金奖桂冠，浙大团体第一，1016名高手同台竞技CCSP2020&#32;">西安交大王之坤摘得金奖桂冠，浙大团体第一，1016名高手同台竞技CCSP2020&#32;</div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="font ellipsis" title="百里挑一，461位高手角逐CCSP，多家企业探问人才去向">百里挑一，461位高手角逐CCSP，多家企业探问人才去向</div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="font ellipsis" title="2018&#32;CCF&#32;CCSP竞赛获奖榜单">2018&#32;CCF&#32;CCSP竞赛获奖榜单</div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="font ellipsis" title="474位参赛者历经12小时鏖战，“知乎杯”2018CCSP颁奖会颁出最终奖项">474位参赛者历经12小时鏖战，“知乎杯”2018CCSP颁奖会颁出最终奖项</div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="font ellipsis" title="CCF&#32;CCSP&#32;2017高校前30名排行榜">CCF&#32;CCSP&#32;2017高校前30名排行榜</div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="font ellipsis" title="2017&#32;CCF大学生计算机系统与程序设计竞赛及颁奖会在福州成功举办">2017&#32;CCF大学生计算机系统与程序设计竞赛及颁奖会在福州成功举办</div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="font ellipsis" title="CCF&#32;CCSP&#32;2016获奖者排行榜&#32;">CCF&#32;CCSP&#32;2016获奖者排行榜&#32;</div>
+                </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    
+    <!-- 设施介绍end -->
+    
+     <!-- 优秀志愿者 -->
+      
+        <div class="vol-box hide">
+          <div class="pub-title clearfix">
+            <div class="fl cat-title">
+              <span class="blue">优秀</span>志愿者
+            </div>
+            <a class="fr" href="" target="_blank">
+              <img src="/images/kjlt/icon5.png" />
+            </a>
+          </div>
+          <div class="vol-list">
+            <div class="vol-swiper">
+              <div class="swiper-wrapper">
+                
+              </div>
+            </div>
+            <div class="swiper-vol-btn noselect swiper-vol-prev">
+              <img src="/images/kjlt/icon14.png" />
+            </div>
+            <div class="swiper-vol-btn noselect swiper-vol-next">
+              <img src="/images/kjlt/icon15.png" />
+            </div>
+          </div>
+        </div>
+      
+      <!-- 优秀志愿者 -->
+    
+    
+    
+    
+     <div class="b_title text-center">
+      
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+  </div>
+  
+
+<div class="kjlt-footer">
+  <div class="foot-top">
+    <div class="container">
+      <div class="row clearfix">
+        <div class="col-md-3 col-xs-12 fl left">
+          <div class="info">
+            <div class="">电话： (+86)10 6256 2503</div>
+            <div class="">邮件： ccf@ccf.org.cn </div>
+            <div class=""> 意见： suggest@ccf.org.cn</div>
+            <div class="">投诉： complain@ccf.org.cn</div>
+          </div>
+          <div class="code clearfix">
+            <div class="item fl">
+              <img src="/images/kjlt/code1.png" />
+              <div class="font">数字图书馆</div>
+            </div>
+            <div class="item fl">
+              <img src="/images/kjlt/code2.png" />
+              <div class="font">微信公众号</div>
+            </div>
+            <div class="item fl">
+              <img src="/images/kjlt/code3.png" />
+              <div class="font">官方微博</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-9 col-xs-12 fr right">
+          <div class="item">
+            <div class="name">
+              <span>关于CCF</span>
+            </div>
+            <div class="list">
+              <div>
+                <a href="https://www.ccf.org.cn/Intro_CCF/2021-03-16/533517.shtml" target="_blank">简介</a>
+              </div>
+              <div>
+                <a href="https://www.ccf.org.cn/Governance/Governance/Member_Congress/" target="_blank">组织机构</a>
+              </div>
+              <div>
+                <a href="https://www.ccf.org.cn/About_CCF/CCF_Constitution/" target="_blank">章程</a>
+              </div>
+              <div>
+                <a href="https://www.ccf.org.cn/Media_list/" target="_blank">新闻</a>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="name">
+              <span>会员</span>
+            </div>
+            <div class="list">
+              <div>
+                <a href="https://www.ccf.org.cn/Membership/Individual_member/Benefits/" target="_blank">会员权益</a>
+              </div>
+              <div>
+                <a href="https://web.ccf.org.cn/CCF/regTo.action?flag=0&amp;url=" target="_blank">成为会员</a>
+              </div>
+              <div>
+                <a href="http://web.ccf.org.cn/CCF/frame.action?menuShowFlag=B00021" target="_blank">会员续费</a>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="name">
+              <span>会议活动</span>
+            </div>
+            <div class="list">
+              
+                <div>
+                  <a href="https://conf.ccf.org.cn/conf/show.action?code=index" target="_blank">活动报名</a>
+                </div>
+              
+              <div>
+                <a href="https://www.ccf.org.cn/ccf/eventcalendar/ch?SiteID=122" target="_blank">活动日历</a>
+              </div>
+              <div>
+                <a href="https://www.ccf.org.cn/Activities/Activities/" target="_blank">系列活动</a>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="name">
+              <span>数字图书馆</span>
+            </div>
+            <div class="list">
+              <div>
+                <a href="https://dl.ccf.org.cn/article/articleIndex.html?typeClassVal=cccf&amp;pageNum_p=1" target="_blank">CCCF</a>
+              </div>
+              <div>
+                <a href="https://dl.ccf.org.cn/article/articleIndex.html?typeClassVal=journal&amp;pageNum_p=1" target="_blank">期刊</a>
+              </div>
+              <div>
+                <a href="https://dl.ccf.org.cn/video/videoIndex.html?pageNum_p=1" target="_blank">会议视频</a>
+              </div>
+              <div>
+                <a href="https://dl.ccf.org.cn/albumList/albumSecondary.html?selectType=hy&amp;pageNum_p=1" target="_blank">资料检索</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot-btm ">
+    <div class="container">
+      <div class="row clearfix">
+        <div class="fl">版权所有 中国计算机学会 技术支持：泽元软件 <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802033133" style="display:inline-block;text-decoration:none;height:16px;line-height:16px;"><img src="https://www.ccf.org.cn/images/icon.png" style="float:left;"/><p style="float:left;height:20px;line-height:21px;margin: 0px 0px 0px 5px; ">京公网安备 11010802033133号</p></a> <a  href="https://beian.miit.gov.cn/" target="_blank">京ICP备13000930号-5 </a></div>
+        <div class="fr">
+          <a href="https://www.ccf.org.cn/FAQ/Membership/"  target="_blank">常见问题</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+          <a href="https://www.ccf.org.cn/Career_Center/Join_Us/"  target="_blank">招聘信息</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="https://www.ccf.org.cn/en/"  target="_blank">英文网站</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="right-fix hide">
+  
+    <div class="item1 item">
+      <a href="/Membership/Individual_member/Benefits/" target="_blank">会员权益</a>
+    </div>
+  
+  <div class="item2 item">
+    
+      <a href="/Membership/Individual_member/Stories/" target="_blank">会员故事</a>
+    
+  </div>
+  <div class="item3 item">
+    
+      <a href="/Membership/Individual_member/Honor/" target="_blank">会员荣誉</a>
+    
+  </div>
+  <div class="item4 item">
+    <a href="https://web.ccf.org.cn/CCF/regTo.action?flag=0&amp;url=" target="_blank">入会流程</a>
+  </div>
+  <!-- <div class="item5 item">
+    <a href="" target="_blank">二维码</a>
+  </div> -->
+  <div class="item6 go-top">
+    <a class="pointer">返回顶部</a>
+  </div>
+</div>
+ 
+<!--分享-->
+<!-- JiaThis Button BEGIN -->
+
+<span class="detail-h2 hidden">CCSP</span>
+  		<span class="summary hidden"></span>
+
+<style>
+    .bdsharebuttonbox {
+      position: relative;
+    }
+
+    .bdsharebuttonbox .qrcode_c {
+      position: absolute;
+      display: none;
+      width: 100px;
+      height: 100px;
+      right: 70px;
+      background: #fff;
+      padding: 5px;
+      top: 42px;
+    }
+
+    .bdsharebuttonbox .qrcode_c img {
+      max-width: 100%;
+      max-height: 100%;
+      margin: 0 auto;
+    }
+  </style>
+  
+<div class="jiathis_share_slide jiathis_share_32x32 hidden-xs hidden-sm" id="jiathis_share_slide">
+  <div class="bdsharebuttonbox bshare-custom clearfix">
+    <a href="#" class="bds_sqq bshare-qqim" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_weixin bshare-weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tsina bshare-sinaminiblog" data-cmd="tsina" title="分享到新浪微博"></a>
+    <div id="qrcode_c" class="qrcode_c"></div>
+  </div>
+  
+<!-- JiaThis Button END -->
+<script src="/js/qrcode.js"></script>
+<script src="/js/weixin.js"></script>
+<script src="//res.wx.qq.com/open/js/jweixin-1.0.0.js" type="text/javascript"></script>
+<script>
+
+$(window).on('load', function () {
+    var shareurl = window.location.href;
+    var title = $('.detail-h2').text();
+    // var title = "";
+    var prefix = "/";
+    var siteUrl = "https://www.ccf.org.cn/"
+    if (prefix != "/") {
+        siteUrl = siteUrl.replace('/', '');
+    }
+       var imgUrl = siteUrl + "/upload/resources/image/2019/12/01/108228.png";
+  
+    var desc = $(".summary").text();
+    desc = desc.replace("/\\r\\n?", "<br>").replace("\\n", "<br>").replace(/\'/g, "").replace(/\"/g, "").replace(/\‘/g, "").replace(/\“/g, "").replace(/\’/g, "").replace(/\”/g, "");
+    var siteID = "122";
+    weiXinShare(shareurl, title, imgUrl, desc,siteID);
+    $(".bshare-qzone").click(function () {
+        var desurl = 'http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=' + shareurl + '&title=' + title + '&pics=' + imgUrl + '&summary=' + desc + '&searchPic=false&style=simple';
+        window.open(desurl);
+    })
+    $(".bshare-sinaminiblog").click(function () {
+       var desurl = "http://service.weibo.com/share/share.php?appkey=&title=" + title + "&url=" + shareurl + "&pic=" + imgUrl + "&searchPic=false&style=simple";
+        window.open(desurl);
+    })
+    $(".bshare-qqim").click(function () {
+        var desurl = "http://connect.qq.com/widget/shareqq/index.html?title=" + title + "&url=" + shareurl + "&pic=" + imgUrl + '&summary=' + desc + "&searchPic=false&style=simple";
+        window.open(desurl);
+    })
+
+    var qrcode_c = document.getElementById("qrcode_c");
+    if (qrcode_c) {
+        var qrcode = new QRCode(qrcode_c, {
+            width: 180,
+            height: 180
+        });
+        qrcode.makeCode(shareurl);
+    }
+    $(".bshare-weixin").hover(function () {
+        $("#qrcode_c").stop().css("display", "block");
+    }, function () {
+        $("#qrcode_c").stop().css("display", "none");
+    })
+
+});
+
+</script>
+<style>
+  .bd_weixin_popup{min-width:250px;min-height: 315px;}
+  .bdshare-button-style0-32 a{width:42px;height:42px;}
+  #jiathis_share_slide{ position:fixed!important; right:0px!important;left: inherit!important; background:#144aac!important; width:45px!important; height:154px;top:50%;margin-top:-127px;border:none; border-radius:0px; text-align:center;}
+  .bdsharebuttonbox .jiathis_share_gotop{ background:url(/images/share-icon4.png) no-repeat!important; height:32px; width:26px;position: absolute;bottom: 5px;right: 9px; border-bottom:none;}
+  .bdsharebuttonbox .jiathis_share_slide_top{ display:none;}
+  #jiathis_share_slide .jiathis_style_32x32{padding-left:5px!important;margin-top: 7px;}
+  .bdsharebuttonbox .bds_sqq{ background:url(/images/share-icon1.png) no-repeat center center;}
+  .bdsharebuttonbox .bds_weixin{ background:url(/images/share-icon2.png) no-repeat center center;}
+  .bdsharebuttonbox .bds_tsina{ background:url(/images/share-icon3.png) no-repeat center center;}
+  .bdsharebuttonbox a.jtico_jiathis{ display:none!important;}
+  .bdsharebuttonbox a span{margin-top:3px;}
+  .bshare-custom a {width: 42px;height: 42px;float: left;line-height: 32px;cursor: pointer;margin: 6px 6px 6px 0;text-indent: -100em;overflow: hidden;color: #3a8ceb;}
+  
+</style>
+
+<STYLE>@media screen and (max-width: 800px) {.head-con H3{margin-top: 0PX;width: 200px;}}</STYLE>
+<script>
+  $('.go-top').click(function () {
+    $('html,body').animate({ scrollTop: 0 }, 500);
+    return false;
+  });
+  var height = $(window).height();
+  var scrollHandler = function (evt) {
+    var top = Math.max(document.documentElement.scrollTop, document.body.scrollTop)
+    if (top > height) {
+      $(".go-top").fadeIn(500);
+    } else {
+      $(".go-top").fadeOut(500);
+    }
+  }
+  $(document.body).on('scroll', scrollHandler);
+  $(window).on('scroll', scrollHandler);
+
+</script>
+
+  <script src="/js/jquery.mCustomScrollbar.min.js"></script>
+  <script>
+     // 学术活动
+    var bigLearn = new Swiper('.big-learn', {
+      // autoplay: 5000,
+      loop: true,
+      effect: 'fade',
+      fade: {
+        crossFade: true,
+      }
+    })
+    var smallLearn = new Swiper('.small-learn', {
+      prevButton: '.swiper-learn-prev',
+      nextButton: '.swiper-learn-next',
+      slidesPerView: 2,
+      spaceBetween: 24,
+      // autoplay: 5000,
+      loop: true,
+    })
+    bigLearn.params.control = smallLearn;
+    smallLearn.params.control = bigLearn;
+
+    var Learnbox = new Swiper('.learnbox', {
+      control: [bigLearn, smallLearn],
+    })
+
+
+    // $(".meet-box .rightbox").mCustomScrollbar({
+    //   mouseWheel: {
+    //     preventDefault: true
+    //   }
+    // });
+    $(".meet-box .item").hover(function () {
+      $(this).addClass("active").siblings().removeClass("active");
+      var imgSrc = $(this).find(".img-block").attr("attr");
+      $(".meet-box .leftbox img").attr("src", imgSrc)
+    })
+    
+        // 学术活动end
+     // 优秀志愿者
+    var SwiperVol = new Swiper('.vol-swiper', {
+      prevButton: '.swiper-vol-prev',
+      nextButton: '.swiper-vol-next',
+      slidesPerView: 6,
+      spaceBetween: 24,
+      loop: true,
+      breakpoints: {
+        1200: {
+          slidesPerView: 5,
+        },
+        992: {
+          slidesPerView: 4,
+        },
+        768: {
+          slidesPerView: 3,
+        },
+        540: {
+          slidesPerView: 2,
+        }
+      },
+    })
+   // 优秀志愿者end
+
+    
+    
+    
+    
+    
+    var myNewsSwiper = new Swiper('.swiper', {
+      slidesPerView: "1",
+      speed: 1000,
+      // autoplay: true,
+      autoplay: 5000,
+      autoplayDisableOnInteraction: false,
+      observer: true,
+      observeParents: true,
+      pagination: '.news-dot',
+      prevButton: $(".swiper-news-prev"),
+      nextButton: $(".swiper-news-next"),
+      paginationClickable: true,
+      onSlideChangeStart: function (swiper) {
+        $('.swiper-page span').eq(swiper.realIndex).addClass('on').siblings().removeClass('on')
+      }
+    });
+
+    var ExclusiveImg = new Swiper('.exclusive-img', {
+      // loop: true,
+      onSlideChangeEnd: function (swiper) {
+        var curIndex = swiper.activeIndex;
+        $(".exclusive-font .swiper-slide").eq(curIndex).addClass("active").siblings().removeClass("active")
+        ExclusiveFont.slideTo(curIndex, 1000, false);
+      }
+    });
+    var ExclusiveFont = new Swiper('.exclusive-font', {
+      // loop: true,
+      direction: 'vertical',
+      // centeredSlides: true,
+      slidesPerView: 8,
+      slideToClickedSlide: true,
+      breakpoints: {
+        992: {
+          direction: 'horizontal',
+          slidesPerView: 4,
+          watchSlidesProgress: true,
+          watchSlidesVisibility: true,
+        },
+        640: {
+          direction: 'horizontal',
+          slidesPerView: 3,
+        }
+      }
+    });
+
+    $(".exclusive-font .swiper-slide").eq(0).addClass("active")
+    // ExclusiveImg.params.control = ExclusiveFont;
+    // ExclusiveFont.params.control = ExclusiveImg;
+
+    $(".exclusive-font .swiper-slide").hover(function () {
+      $(this).addClass("active").siblings().removeClass("active")
+      var curIndex = $(this).index();
+      ExclusiveImg.slideTo(curIndex, 1000, false);
+      ExclusiveFont.slideTo(curIndex, 1000, false);
+    })
+
+    $(".honorbox .item .swiper-name").each(function () {
+      var parNode = $(this);
+      var curIndex = $(this).parents(".item").index() + 1;
+      new Swiper(parNode, {
+        loop: true,
+        spaceBetween: 10,
+        centeredSlides: true,
+        slidesPerView: 3,
+        prevButton: $(".swiper-name-prev" + curIndex),
+        nextButton: $(".swiper-name-next" + curIndex),
+        breakpoints: {
+          1200: {
+            slidesPerView: 2,
+            centeredSlides: false,
+          },
+          992: {
+            slidesPerView: 3,
+          },
+          768: {
+            slidesPerView: 4,
+            centeredSlides: false,
+          },
+          540: {
+            slidesPerView: 3,
+            centeredSlides: false,
+          }
+        },
+      });
+    })
+
+
+    $(".active-nav .data-item").click(function () {
+      if ($(this).hasClass("on")) {
+        $(this).find(".data-list").slideUp();
+        $(this).removeClass("on")
+      } else {
+        $(this).find(".data-list").slideDown();
+        $(this).addClass("on")
+      }
+    })
+
+    $(document).on('click', ':not(.data-item)', function () {
+      $(".data-list").slideUp();
+      $(".active-nav .data-item").removeClass("on")
+      return
+    });
+    $(".active-nav .data-item").on("click", function (e) {
+      e.stopPropagation();
+    });
+
+    var activeSwiper = '';
+    $(".MonthDateList .item").click(function () {
+      $(".monthnum").text($(this).text());
+      swiperSlideTo()
+    })
+
+    // $(".active-list").mCustomScrollbar({
+    //   autoHideScrollbar: true,
+    //   scrollbarPosition: "outside",
+    //   mouseWheel: {
+    //     preventDefault: true
+    //   }
+    // });
+
+    //模板替换
+    function tmpl(template, data) {
+      var reg = /\{[^{}]+\}/g;
+      return template.replace(reg, function (word) {
+        //去掉外层{ }
+        word = word.substring(1, word.length - 1);
+        var result = eval(word);
+        if (result == undefined || result == null) {
+          result = "";
+        }
+        return result;
+      })
+    }
+
+    // 会员权益
+    var nextPage;
+    getList();
+    function getList(getUrl) {
+      var siteURL = "https://www.ccf.org.cn/";
+      if (!getUrl) {
+        getUrl = siteURL + 'json/ccfhy_new/';
+      }
+      $.getJSON(getUrl, function (response) {
+        nextPage = response[0].appNextPageUrl;
+        var hasNext = response[0].nextPageUrl;
+        if (!hasNext || hasNext == "#") {
+          $(".loadbtn").hide();
+        } else {
+          $(".loadbtn").show();
+        }
+        if (!$(".listarticle").prop("template")) {
+          $(".listarticle").prop("template", $(".listarticle").children("template").html())
+        }
+        if (!$(".listimg").prop("template")) {
+          $(".listimg").prop("template", $(".listimg").children("template").html())
+        }
+        var html = '';
+        response[0].data.forEach(function (data) {
+          if (data.logoFile) {
+            var listtemplate = $(".listimg").prop("template");
+          } else {
+            var listtemplate = $(".listarticle").prop("template");
+          }
+          html += tmpl(listtemplate, data);
+        })
+        $(".messagebox").append(html);
+      })
+    }
+    $(".loadbtn").click(function () {
+      getList(nextPage);
+    })
+
+
+    // 活动日历
+    var myDate = new Date();
+    var thisYear = myDate.getFullYear() - 5;
+    var LastYear = myDate.getFullYear() + 5;
+    var startYear = myDate.getFullYear() - 5;
+    for (var i = 0; i <= 10; i++) {
+      $(".yearDateList").append('<div class="item" onclick="yearClick(this)">' + thisYear++ + '年</div>')
+    }
+    $(".data-list").mCustomScrollbar({
+      mouseWheel: {
+        preventDefault: true
+      }
+    });
+
+    function yearClick(e) {
+      $(".yearnum").text($(e).text());
+      swiperSlideTo()
+
+      var myDate = Number($(e).text().substr(0, 4));
+      var thisYear = myDate - 5;
+      var LastYear = myDate + 5;
+      var startYear = myDate - 5;
+      $(".yearDateList .mCSB_container").html("")
+      for (var i = 0; i <= 10; i++) {
+        $(".yearDateList .mCSB_container").append('<div class="item" onclick="yearClick(this)">' + thisYear++ + '年</div>')
+      }
+      $(".yearDateList").mCustomScrollbar({
+        mouseWheel: {
+          preventDefault: true
+        }
+      });
+
+      getDatalist(startYear, LastYear, 'time')
+    }
+
+    getDatalist(startYear, LastYear)
+    function getDatalist(startYear, LastYear, hastime) {
+      var dc = new DataCollection();
+      dc.add("StartTime", startYear + "-01-01 00:00:00");
+      dc.add("EndTime", LastYear + "-12-31 23:59:59");
+      dc.add("SiteID", "122");
+      dc.add("CatalogID", "27746");
+      Server.sendRequest("eventcalendar.getData", dc, function (response) {
+        data = JSON.parse(response.Data);
+        if (!$(".sildeTem").prop("template")) {
+          $(".sildeTem").prop("template", $(".sildeTem").children("template").html())
+        }
+        if (!$(".monthTem").prop("template")) {
+          $(".monthTem").prop("template", $(".monthTem").children("template").html())
+        }
+        var html = '';
+        var prevMon = '';
+        var curMon = '';
+        $(".active-list .swiper-wrapper").html("");
+        var today = "20261006";
+        var hasToady = true;
+        data.forEach(function (data) {
+          var sildeTem = $(".sildeTem").prop("template");
+          var sildeMon = $(".monthTem").prop("template");
+          //data.curTime = data.startDate.replaceAll('-', '');
+          		data.curTime = data.startDate.replace(/-/g, '');
+          data.curYear = data.curTime.substr(0, 6)
+          data.curMon = data.curTime.substr(4, 2)
+          data.curDay = data.curTime.substr(6, 2)
+          
+                    data.curYear2 = data.curTime.substr(0, 4)
+
+          if (prevMon) {
+            if (prevMon != data.curYear) {
+              prevMon = data.curYear
+              html += tmpl(sildeMon, data);
+            }
+          } else {
+            prevMon = data.curYear;
+            html += tmpl(sildeMon, data);
+          }
+          // var today = "20190624";
+          
+                    
+                    const ntoday1=new Date();
+                    ntoday1.setDate(ntoday1.getDate()+1);
+                    const ntoday2=new Date();
+                    ntoday2.setDate(ntoday2.getDate()+2);
+                    const ntoday3=new Date();
+                    ntoday3.setDate(ntoday3.getDate()+3);
+                    const ntoday4=new Date();
+                    ntoday4.setDate(ntoday4.getDate()+4);
+                    const ntoday5=new Date();
+                    ntoday5.setDate(ntoday5.getDate()+5);
+                    const ntoday6=new Date();
+                    ntoday6.setDate(ntoday6.getDate()+6);
+                    const ntoday7=new Date();
+                    ntoday7.setDate(ntoday7.getDate()+7);
+                    const ntoday8=new Date();
+                    ntoday8.setDate(ntoday8.getDate()+8);
+                    const ntoday9=new Date();
+                    ntoday9.setDate(ntoday9.getDate()+9);
+                    const ntoday10=new Date();
+                    ntoday10.setDate(ntoday10.getDate()+10);
+           const ntoday11=new Date();
+                    ntoday11.setDate(ntoday11.getDate()+11);
+           const ntoday12=new Date();
+                    ntoday12.setDate(ntoday12.getDate()+12);
+           const ntoday13=new Date();
+                    ntoday13.setDate(ntoday13.getDate()+13);
+           const ntoday14=new Date();
+                    ntoday14.setDate(ntoday14.getDate()+14);
+           const ntoday15=new Date();
+                    ntoday15.setDate(ntoday15.getDate()+15);
+          
+          
+          
+          if (hasToady) {  
+            if (data.curTime == today) {
+              data.curTimeClass = 'active todaybox'
+              hasToady = false;
+                        } else if ( Number(data.curDay) == Number(ntoday1.getDate()) &&  Number(data.curYear2) == Number(ntoday1.getFullYear())   &&   Number(data.curMon) == Number(ntoday1.getMonth()+1)                            ){
+              data.curTimeClass = 'active'                           
+              hasToady = false;
+                        } else if ( Number(data.curDay) == Number(ntoday2.getDate()) &&  Number(data.curYear2) == Number(ntoday2.getFullYear())   &&   Number(data.curMon) == Number(ntoday2.getMonth()+1)                            ){
+              data.curTimeClass = 'active'                           
+              hasToady = false;  
+                        } else if ( Number(data.curDay) == Number(ntoday3.getDate()) &&  Number(data.curYear2) == Number(ntoday3.getFullYear())   &&   Number(data.curMon) == Number(ntoday3.getMonth()+1)                            ){
+              data.curTimeClass = 'active'                           
+              hasToady = false;
+                        } else if ( Number(data.curDay) == Number(ntoday4.getDate()) &&  Number(data.curYear2) == Number(ntoday4.getFullYear())   &&   Number(data.curMon) == Number(ntoday4.getMonth()+1)                            ){
+              data.curTimeClass = 'active'                           
+              hasToady = false;  
+                        
+                        } else if ( Number(data.curDay) == Number(ntoday5.getDate()) &&  Number(data.curYear2) == Number(ntoday5.getFullYear())   &&   Number(data.curMon) == Number(ntoday5.getMonth()+1)                            ){
+              data.curTimeClass = 'active'                           
+              hasToady = false;
+              
+                       } else if ( Number(data.curDay) == Number(ntoday6.getDate()) &&  Number(data.curYear2) == Number(ntoday6.getFullYear())   &&   Number(data.curMon) == Number(ntoday6.getMonth()+1)                            ){
+              data.curTimeClass = 'active'                           
+              hasToady = false;
+                        } else if ( Number(data.curDay) == Number(ntoday7.getDate()) &&  Number(data.curYear2) == Number(ntoday7.getFullYear())   &&   Number(data.curMon) == Number(ntoday7.getMonth()+1)                            ){
+              data.curTimeClass = 'active'                           
+              hasToady = false;
+              
+                       } else if ( Number(data.curDay) == Number(ntoday8.getDate()) &&  Number(data.curYear2) == Number(ntoday8.getFullYear())   &&   Number(data.curMon) == Number(ntoday8.getMonth()+1)                            ){
+              data.curTimeClass = 'active'                           
+              hasToady = false; 
+                         
+                        } else if ( Number(data.curDay) == Number(ntoday9.getDate()) &&  Number(data.curYear2) == Number(ntoday9.getFullYear())   &&   Number(data.curMon) == Number(ntoday9.getMonth()+1)                            ){
+              data.curTimeClass = 'active'                           
+              hasToady = false;
+                        } else if ( Number(data.curDay) == Number(ntoday10.getDate()) &&  Number(data.curYear2) == Number(ntoday10.getFullYear())   &&   Number(data.curMon) == Number(ntoday10.getMonth()+1)                            ){
+              data.curTimeClass = 'active'                           
+              hasToady = false;
+              
+                       } else if ( Number(data.curDay) == Number(ntoday11.getDate()) &&  Number(data.curYear2) == Number(ntoday11.getFullYear())   &&   Number(data.curMon) == Number(ntoday11.getMonth()+1)                            ){
+              data.curTimeClass = 'active'                           
+              hasToady = false;  
+                        } else if ( Number(data.curDay) == Number(ntoday12.getDate()) &&  Number(data.curYear2) == Number(ntoday12.getFullYear())   &&   Number(data.curMon) == Number(ntoday12.getMonth()+1)                            ){
+              data.curTimeClass = 'active'                           
+              hasToady = false;
+              
+                       } else if ( Number(data.curDay) == Number(ntoday13.getDate()) &&  Number(data.curYear2) == Number(ntoday13.getFullYear())   &&   Number(data.curMon) == Number(ntoday13.getMonth()+1)                            ){
+              data.curTimeClass = 'active'                           
+              hasToady = false;  
+                        } else if ( Number(data.curDay) == Number(ntoday14.getDate()) &&  Number(data.curYear2) == Number(ntoday14.getFullYear())   &&   Number(data.curMon) == Number(ntoday14.getMonth()+1)                            ){
+              data.curTimeClass = 'active'                           
+              hasToady = false;
+              
+                       } else if ( Number(data.curDay) == Number(ntoday15.getDate()) &&  Number(data.curYear2) == Number(ntoday15.getFullYear())   &&   Number(data.curMon) == Number(ntoday15.getMonth()+1)                            ){
+              data.curTimeClass = 'active'                           
+              hasToady = false;  
+                         
+                         
+                         
+
+            }
+          }
+          html += tmpl(sildeTem, data);
+        })
+        $(".active-list .swiper-wrapper").append(html);
+
+        initSwiperDate(hastime)
+      });
+    }
+
+    function initSwiperDate(hastime) {
+      if (hastime) {
+        var curDate = $(".yearnum").text().substr(0, 4) + '' + $(".monthnum").text().substr(0, 2);
+        var todayIndex = $(".date-" + curDate).index();
+        if (todayIndex < 0) {
+          todayIndex = $(".active-date .active-list .thing-box.active").index() - 1;
+        }
+      } else {
+        var todayIndex = $(".active-date .active-list .thing-box.active").index() - 1;
+      }
+      activeSwiper = new Swiper('.swiper-active', {
+        mousewheelControl: true,
+        direction: 'vertical',
+        grabCursor: true,
+        // scrollbar: '.swiper-scrollbar',
+        // scrollbarHide: true,
+        slidesPerView: 'auto',
+        slidesPerGroup: 3,
+        autoHeight: true,
+        initialSlide: todayIndex,
+        watchSlidesVisibility: true,
+        onSlideChangeEnd: function (swiper) {
+          if (!hastime) {
+            var curSlideleng = $(".mon-box.swiper-slide-active").length;
+            if (curSlideleng > 0) {
+              var curDate = $(".mon-box.swiper-slide-active").attr("attr");
+            } else {
+              var curDate = $(".thing-box.swiper-slide-active").attr("attr");
+            }
+            var curYear = curDate.substr(0, 4) + '年';
+            var curMonth = curDate.substr(4, 2) + '月';
+            $(".yearnum").text(curYear)
+            $(".monthnum").text(curMonth)
+          }
+        },
+      })
+    }
+
+    function swiperSlideTo() {
+      var curDate = $(".yearnum").text().substr(0, 4) + '' + $(".monthnum").text().substr(0, 2);
+      var curActiveIndex = $(".date-" + curDate).index();
+      if (curActiveIndex < 0) {
+        curActiveIndex = $(".thing-box.active").index();
+      }
+      activeSwiper.slideTo(curActiveIndex, 1000, false);
+    }
+    
+    
+    
+
+  </script>
+
+<script src="https://www.ccf.org.cn/ccf/stat/front/stat.js" type="text/javascript"></script>
+<script>
+if(window._zcms_stat)_zcms_stat("SiteID=122&CatalogInnerCode=001394000004000002&Type=null&Dest=https://www.ccf.org.cn/ccf/stat/dealer");
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?52c5741a6890518197fb671ac942f81e";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<!-- App=ZCMS(CCF内容管理系统) 2.5.28290,CostTime=35,PublishDate=2026-10-06 23:50:01 -->
+</body>
+
+</html>
