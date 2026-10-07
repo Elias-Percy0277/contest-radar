@@ -62,6 +62,9 @@ PAGES: dict[str, str] = {
     "ccf_cert.html": "https://www.ccf.org.cn/Activities/Certification/",
     "cacc.html": "https://cacc.ccf.org.cn/",
     "huawei_shell.html": "https://competition.huaweicloud.com/",
+    "tiaozhanbei.html": "https://www.tiaozhanbei.net/",
+    "cy_ncss.html": "https://cy.ncss.cn/",
+    "jsjds.html": "https://jsjds.blcu.edu.cn/",
 }
 CF_API = "https://codeforces.com/api/contest.list"
 
@@ -120,6 +123,74 @@ async def fetch_huawei_rendered() -> None:
         print(f"[skip] 华为云渲染失败（chromium 未装或网络问题）：{exc.__class__.__name__}: {exc}")
 
 
+async def fetch_api_fixtures() -> None:
+    """JSON 接口 fixture：LeetCode upcoming GraphQL 与 天池 race/page。"""
+    try:
+        from app.parsers.leetcode import QUERY
+        from app.parsers._util import fetch_json
+
+        payload = await fetch_json(
+            "https://leetcode.cn/graphql/",
+            json_body={"query": QUERY, "variables": {}, "operationName": "contestV2UpcomingContests"},
+        )
+        save_text("leetcode_upcoming.json", json.dumps(payload, ensure_ascii=False, indent=1))
+    except Exception as exc:
+        print(f"[FAIL] leetcode_upcoming.json: {exc.__class__.__name__}: {exc}")
+    try:
+        from app.parsers._util import fetch_json
+
+        payload = await fetch_json(
+            "https://tianchi.aliyun.com/v3/proxy/competition/api/race/page",
+            params={"visualTab": "", "raceName": "", "pageNum": 1, "isActive": ""},
+        )
+        save_text("tianchi_race_page.json", json.dumps(payload, ensure_ascii=False, indent=1))
+    except Exception as exc:
+        print(f"[FAIL] tianchi_race_page.json: {exc.__class__.__name__}: {exc}")
+
+
+async def fetch_playwright_p1_fixtures() -> None:
+    """P1 第二批 Playwright 源 fixture：渲染 + 捕获各自 XHR JSON。"""
+    try:
+        from playwright.async_api import async_playwright
+
+        jobs = [
+            ("lanqiao", "app.parsers.lanqiao.LanqiaoSource", "https://dasai.lanqiao.cn/",
+             {"news": "datalist 捕获", "api": "lanqiao_api.json", "html": "lanqiao_rendered.html"}),
+            ("zhihu_hackathon", "app.parsers.zhihu_hackathon.ZhihuHackathonSource", "https://www.zhihu.com/hackathon",
+             {"api": "zhihu_hackathon_config.json", "html": "zhihu_rendered.html"}),
+            ("astar", "app.parsers.astar.AstarSource", "https://astar.baidu.com/#/",
+             {"api": "astar_articles.json", "html": "astar_rendered.html"}),
+        ]
+        async with async_playwright() as p:
+            browser = await p.chromium.launch(headless=True)
+            for name, mod_cls, url, spec in jobs:
+                try:
+                    import importlib
+
+                    mod_name, cls_name = mod_cls.rsplit(".", 1)
+                    src = getattr(importlib.import_module(mod_name), cls_name)()
+                    page = await browser.new_page(user_agent=UA)
+                    captured = await src._render_and_capture(page, url)
+                    html = captured.get("dom_html") or ""
+                    if not html:
+                        html = await page.content()
+                    if spec.get("html"):
+                        save_text(spec["html"], html)
+                    if name == "lanqiao":
+                        save_text(spec["api"], json.dumps({"news": captured.get("news", [])}, ensure_ascii=False, indent=1))
+                    elif name == "zhihu_hackathon":
+                        save_text(spec["api"], json.dumps({"activity": captured.get("activity"),
+                                                           "page_text": captured.get("page_text", "")}, ensure_ascii=False, indent=1))
+                    else:
+                        save_text(spec["api"], json.dumps({"articles": captured.get("articles", [])}, ensure_ascii=False, indent=1))
+                    await page.close()
+                except Exception as exc:
+                    print(f"[skip] {name}: {exc.__class__.__name__}: {str(exc)[:100]}")
+            await browser.close()
+    except ImportError:
+        print("[skip] playwright 未安装，跳过 P1 第二批 fixture")
+
+
 async def main() -> int:
     failed = False
     async with httpx.AsyncClient(
@@ -133,6 +204,8 @@ async def main() -> int:
         except (httpx.HTTPError, ValueError) as exc:
             failed = True
             print(f"[FAIL] codeforces.json: {exc}")
+    await fetch_api_fixtures()
+    await fetch_playwright_p1_fixtures()
     await fetch_huawei_rendered()
     print("done" + ("（部分失败，见 [FAIL]）" if failed else ""))
     return 0

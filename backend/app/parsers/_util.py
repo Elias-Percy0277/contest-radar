@@ -56,6 +56,37 @@ async def fetch_text(url: str, *, timeout: float = 30.0) -> str:
     return text
 
 
+async def fetch_json(
+    url: str,
+    *,
+    params: dict[str, Any] | None = None,
+    json_body: dict[str, Any] | None = None,
+    timeout: float = 30.0,
+) -> Any:
+    """GET/POST 抓取 JSON 接口（带 UA）；失败抛 SourceError。
+
+    json_body 非空时为 POST（如 LeetCode GraphQL），否则为 GET（如天池列表）。
+    """
+    try:
+        async with httpx.AsyncClient(
+            headers={"User-Agent": UA, "Accept": "application/json, text/plain, */*"},
+            follow_redirects=True,
+            timeout=timeout,
+        ) as client:
+            if json_body is not None:
+                resp = await client.post(url, json=json_body, params=params)
+            else:
+                resp = await client.get(url, params=params)
+    except httpx.HTTPError as exc:
+        raise SourceError(f"接口请求失败：{url}（{exc.__class__.__name__}: {exc}）") from exc
+    if resp.status_code != 200:
+        raise SourceError(f"接口请求失败：{url} 返回 HTTP {resp.status_code}")
+    try:
+        return resp.json()
+    except ValueError as exc:
+        raise SourceError(f"接口返回非 JSON：{url}（{exc}）") from exc
+
+
 def make_soup(html: str) -> BeautifulSoup:
     """构造 BeautifulSoup：优先 lxml（快），环境缺 lxml 二进制时回退内置 html.parser。"""
     try:

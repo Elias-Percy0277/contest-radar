@@ -54,3 +54,63 @@ sources:
     enabled: true
     params:
       url: "https://www.ccf.org.cn/Activities/Certification/"
+  # ---------- P1 冲刺1 第一批新增（5 个，2026-10 实测） ----------
+  - id: tiaozhanbei
+    name: 挑战杯
+    method: http
+    parser: app.parsers.tiaozhanbei.TiaozhanbeiSource
+    enabled: true
+    params:
+      url: "https://www.tiaozhanbei.net/"
+  - id: cy_ncss
+    name: 中国国际大学生创新大赛
+    method: http
+    parser: app.parsers.cy_ncss.CyNcssSource
+    enabled: true
+    params:
+      url: "https://cy.ncss.cn/"
+  - id: jsjds
+    name: 中国大学生计算机设计大赛
+    method: http
+    parser: app.parsers.jsjds.JsjdsSource
+    enabled: true
+    params:
+      url: "https://jsjds.blcu.edu.cn/"
+  - id: leetcode
+    name: LeetCode周赛
+    method: http
+    parser: app.parsers.leetcode.LeetcodeSource
+    enabled: true
+    params:
+      url: "https://leetcode.cn/graphql/"
+      # 数据接口为官方 GraphQL（POST contestV2UpcomingContests），列表页本身是客户端渲染
+  - id: tianchi
+    name: 阿里天池
+    method: http
+    parser: app.parsers.tianchi.TianchiSource
+    enabled: true
+    params:
+      url: "https://tianchi.aliyun.com/v3/proxy/competition/api/race/page"
+      pages: 2 # 列表接口公开 JSON，抓前 2 页
+  # ---------- P1 冲刺1 第二批新增（3 个 Playwright，2026-10 实测） ----------
+  - id: lanqiao
+    name: 蓝桥杯大赛
+    method: playwright
+    parser: app.parsers.lanqiao.LanqiaoSource
+    enabled: true
+    params:
+      url: "https://dasai.lanqiao.cn/"
+  - id: zhihu_hackathon
+    name: 知乎黑客松
+    method: playwright
+    parser: app.parsers.zhihu_hackathon.ZhihuHackathonSource
+    enabled: true
+    params:
+      url: "https://www.zhihu.com/hackathon"
+  - id: astar
+    name: 百度之星
+    method: playwright
+    parser: app.parsers.astar.AstarSource
+    enabled: true
+    params:
+      url: "https://astar.baidu.com/#/"

@@ -1,0 +1,509 @@
+{
+ "data": {
+  "startRow": 0,
+  "prePage": 0,
+  "hasNextPage": false,
+  "nextPage": 0,
+  "pageSize": 10,
+  "endRow": 0,
+  "list": [
+   {
+    "raceId": 532514,
+    "referUrl": "",
+    "raceListStatus": 0,
+    "raceStartTime": "2026-09-11 00:00:00",
+    "bonus": 280000,
+    "highlightEn": "",
+    "teamCount": 1386,
+    "orgUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532514/1856796652288102/es1umzxt4g388xqj.png",
+    "isSeries": 0,
+    "coverUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532514/WB02138154/e4op7k6ztlpq4srr.png",
+    "highlight": "",
+    "signupEndTime": "2026-10-26 23:59:59",
+    "raceEndTime": "2026-11-15 23:59:59",
+    "signupStartTime": "2026-09-11 00:00:00",
+    "visualTab": 1,
+    "tagsList": [
+     {
+      "tagId": 177,
+      "tagType": "RACE",
+      "tagNameCn": "机器人",
+      "tagName": "机器人"
+     },
+     {
+      "tagId": 153,
+      "tagType": "RACE",
+      "tagNameCn": "计算机视觉‌",
+      "tagName": "CV"
+     }
+    ],
+    "name": "蚂蚁灵波具身大模型挑战赛",
+    "currency": 0,
+    "introduction": "蚂蚁灵波具身大模型挑战赛由蚂蚁灵波科技、魔搭社区、阿里云天池共同发起，是一场面向具身智能开发者的算法挑战赛。\n\n赛事基于开源 LingBot-VLA 2.0 模型搭建统一评测体系，由线上初赛和线下真机黑客马拉松两个阶段组成，面向全球企业、高校、个人开发者及技术爱好者开放。\n\n本次赛事希望让更多开发者真正上手 LingBot-VLA 2.0，在统一任务与真实机器人场景中验证模型复现、训练调优、泛化评测和真机适配能力，推动具身智能技术从模型能力走向真实落地。"
+   },
+   {
+    "raceId": 532480,
+    "referUrl": "",
+    "raceListStatus": 2,
+    "raceStartTime": "2026-08-31 00:00:00",
+    "bonus": 0,
+    "highlightEn": "Data available but invisible; whoever uses the data, governs the data.",
+    "teamCount": 316,
+    "nameEn": "medCodeGPT Evaluation",
+    "orgUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532480/WB02138154/5rlzvrrnoato1h1b.png",
+    "introductionEn": "This task generates NLP code to screen patients for trial criteria using FHIR FSH and submits via FHIR Bundle. It tests runnability, compliance, accuracy, and stability when LLMs guide SLMs.",
+    "isSeries": 0,
+    "coverUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532480/WB02138154/jz3uqe8we1i6atfe.png",
+    "highlight": "数据可用不可见，谁用数据，谁治理数据。",
+    "raceEndTime": "2026-10-12 23:59:59",
+    "visualTab": 1,
+    "tagsList": [
+     {
+      "tagId": 132,
+      "tagType": "RACE",
+      "tagNameCn": "‌医疗健康",
+      "tagName": "Medical Health"
+     }
+    ],
+    "name": "CHIP2026-医学NLP代码自动生成测评 ——识别符合临床试验入组标准的患者",
+    "currency": 0,
+    "introduction": "本任务基于CHIP2025-CP03升级，聚焦医学NLP代码自动生成，以识别符合临床试验入组/出组标准的患者。提供17类48条筛选标准及FHIR FSH定义，需按FHIR Message Bundle递交。评测大模型引导小语言模型(SLM)生成代码的可运行性、标准符合性、查询准确性与稳定性。背景强调CDSS需临床全程参与，但知识产权壁垒阻碍协同；大模型编码与FHIR兼容助系统适配，而SLM引入幻觉与可解释性挑战。本任务为科研、产品及政策提供支撑。"
+   },
+   {
+    "raceId": 532511,
+    "referUrl": "",
+    "raceListStatus": 2,
+    "raceStartTime": "2026-08-30 00:00:00",
+    "bonus": 55000,
+    "highlightEn": "Exploring solutions to network evolution prediction and effective intervention",
+    "teamCount": 549,
+    "orgUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532511/1818612140606782/4fpys320pii3o2aw.png;https://static.tianchi.aliyun.com/tianchi/race/images/prod/532511/1818612140606782/0il9ntlikfukscyx.png",
+    "introductionEn": "",
+    "isSeries": 0,
+    "coverUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532511/WB02138154/p7bqszwz9zt9hbat.png",
+    "highlight": "探索解决网络演化预测与有效干预",
+    "raceEndTime": "2026-10-23 23:59:59",
+    "visualTab": 1,
+    "tagsList": [
+     {
+      "tagId": 168,
+      "tagType": "RACE",
+      "tagNameCn": "程序设计",
+      "tagName": "programming"
+     },
+     {
+      "tagId": 154,
+      "tagType": "RACE",
+      "tagNameCn": "智能体",
+      "tagName": "Agent"
+     },
+     {
+      "tagId": 149,
+      "tagType": "RACE",
+      "tagNameCn": "大语言模型",
+      "tagName": "‌LLM"
+     }
+    ],
+    "name": "2026 SMP第十四届全国社会媒体处理大会-大模型图网络决策挑战赛",
+    "currency": 0,
+    "introduction": "第十四届全国社会媒体处理大会（SMP 2026）将于2026年11月12日至15日在北京召开。本届大会的主题是“大模型驱动人机共生”，旨在探索在大模型和智能体快速发展给人类社会带来的颠覆性变化以及构建人机和谐共生的社会新生态的路径。\nSMP 2026挑战赛由中国中文信息学会社会媒体处理专委会主办，天池平台为指定赛事平台。本次比赛以外星文明降临地球的科幻故事为背景，邀请广大开发者和相关技术团队，通过科学的算法与策略设计，探索解决网络演化预测与有效干预等核心难题。"
+   },
+   {
+    "raceId": 532512,
+    "referUrl": "",
+    "raceListStatus": 0,
+    "raceStartTime": "2026-08-20 00:00:00",
+    "bonus": 0,
+    "highlightEn": "",
+    "teamCount": 420,
+    "orgUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532512/1242990779776242/mpf88jwki1wxqu98.png;https://static.tianchi.aliyun.com/tianchi/race/images/prod/532512/1242990779776242/ct6vf7dcyk6ekm26.png",
+    "isSeries": 0,
+    "coverUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532512/1242990779776242/o2vx2u7412gma59y.png",
+    "highlight": "证书+评测论文",
+    "signupEndTime": "2029-10-03 23:59:59",
+    "raceEndTime": "2029-10-03 23:59:59",
+    "signupStartTime": "2026-10-03 00:00:00",
+    "visualTab": 1,
+    "tagsList": [
+     {
+      "tagId": 132,
+      "tagType": "RACE",
+      "tagNameCn": "‌医疗健康",
+      "tagName": "Medical Health"
+     },
+     {
+      "tagId": 151,
+      "tagType": "RACE",
+      "tagNameCn": "自然语言处理",
+      "tagName": "NLP"
+     },
+     {
+      "tagId": 149,
+      "tagType": "RACE",
+      "tagNameCn": "大语言模型",
+      "tagName": "‌LLM"
+     }
+    ],
+    "name": "CHIP2026-面向生物医学全文的特定患者表型概念识别任务",
+    "currency": 0,
+    "introduction": "第十二届中国健康信息处理大会（CHIP 2026）评测"
+   },
+   {
+    "raceId": 532510,
+    "referUrl": "",
+    "raceListStatus": 0,
+    "raceStartTime": "2026-08-07 00:00:00",
+    "bonus": 20000,
+    "highlightEn": "",
+    "teamCount": 1229,
+    "orgUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532510/WB02138154/ii3xu35t8oa3rrzp.png",
+    "isSeries": 0,
+    "coverUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532510/WB02138154/mrdygxrul3ypaahs.jpg",
+    "highlight": "",
+    "signupEndTime": "2026-12-31 23:59:59",
+    "raceEndTime": "2026-12-31 23:59:59",
+    "signupStartTime": "2026-10-01 00:00:00",
+    "visualTab": 1,
+    "tagsList": [
+     {
+      "tagId": 151,
+      "tagType": "RACE",
+      "tagNameCn": "自然语言处理",
+      "tagName": "NLP"
+     },
+     {
+      "tagId": 149,
+      "tagType": "RACE",
+      "tagNameCn": "大语言模型",
+      "tagName": "‌LLM"
+     }
+    ],
+    "name": "知乎知学堂大模型挑战赛：大模型复杂表格识别与内容理解",
+    "currency": 0,
+    "introduction": "本赛题面向图片和 PDF 文件中的复杂表格识别与内容理解。参赛者需要读取\n题目清单，识别目标文档中的表格结构和表格内容，并完成结构恢复、内容提取\n或简单推理计算，最终提交可自动评分的 Excel 结果文件。"
+   },
+   {
+    "raceId": 41,
+    "referUrl": "",
+    "raceStartTime": "2026-08-06 00:00:00",
+    "bonus": 300000,
+    "highlightEn": "",
+    "teamCount": 679,
+    "nameEn": "2026具身世界realworld挑战赛",
+    "orgUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/41/WB02138154/epvz4dadm5vc77ad.png",
+    "isSeries": 1,
+    "coverUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/41/WB02138154/zfq3mmb47jftu8r2.png",
+    "highlight": "",
+    "raceEndTime": "2026-11-30 23:59:59",
+    "trackList": [
+     {
+      "raceId": 532506,
+      "referUrl": "",
+      "raceListStatus": 2,
+      "raceStartTime": "2026-07-30 00:00:00",
+      "bonus": 100000,
+      "highlightEn": "",
+      "teamCount": 254,
+      "nameEn": "",
+      "orgUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532506/WB02138154/j8smcm3n4p5w8yhn.png",
+      "isSeries": 0,
+      "coverUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532506/WB02138154/ufqobc3mi4hf7elq.png",
+      "highlight": "",
+      "raceEndTime": "2026-11-15 23:59:59",
+      "visualTab": 1,
+      "tagsList": [],
+      "name": "2026-具身仿真合成挑战赛",
+      "currency": 0,
+      "introduction": "仿真资产是具身智能发展的重要基础，广泛应用于仿真场景构建、机器人训练以及仿真到现实的部署验证。本次比赛是全球首个聚焦多设备真实视频到可交互仿真资产端到端生成与系统评测的具身仿真合成挑战赛。参赛队伍需基于多设备采集的真实物体视频，构建自动化处理流水线，生成结构准确、外观真实、物理可信且可交互的高质量仿真就绪型资产。"
+     },
+     {
+      "raceId": 532507,
+      "referUrl": "",
+      "raceListStatus": 2,
+      "raceStartTime": "2026-07-30 00:00:00",
+      "bonus": 100000,
+      "highlightEn": "",
+      "teamCount": 204,
+      "nameEn": "",
+      "orgUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532507/WB02138154/8cu44x5somre217q.png",
+      "isSeries": 0,
+      "coverUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532507/WB02138154/x7grgmzn4dq04cqg.png",
+      "highlight": "",
+      "raceEndTime": "2026-11-15 23:59:59",
+      "visualTab": 1,
+      "tagsList": [],
+      "name": "2026-具身安全应用挑战赛",
+      "currency": 0,
+      "introduction": "围绕“感知—决策—执行”完整闭环，设置视觉感知、空间感知、任务决策、控制通信、状态估计、执行反馈六个攻击环节，考察具身智能模型在遭受多域攻击时的异常发现、链路识别、危险阻断、降级处置与任务恢复等能力。本次比赛是全球首个以具身安全为核心命题，特别支持VLA、WAM等多模态融合技术的具身安全应用挑战赛，旨在检验多模态感知与决策系统在复杂攻击下的鲁棒性。每类赛题包含简单、中等和困难等难度，正式评测中的攻击形式与参数不公开，重点考察具身模型面对未知异常的泛化防御能力。"
+     },
+     {
+      "raceId": 532508,
+      "referUrl": "",
+      "raceListStatus": 0,
+      "raceStartTime": "2026-07-30 00:00:00",
+      "bonus": 100000,
+      "highlightEn": "",
+      "teamCount": 221,
+      "nameEn": "",
+      "orgUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532508/WB02138154/6xluv3vhf3qecgii.png",
+      "isSeries": 0,
+      "coverUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532508/WB02138154/7n494mw4j8z1bry0.png",
+      "highlight": "",
+      "signupEndTime": "2026-10-21 13:59:59",
+      "raceEndTime": "2026-11-15 23:59:59",
+      "signupStartTime": "2026-07-30 00:00:00",
+      "visualTab": 1,
+      "tagsList": [
+       {
+        "tagId": 177,
+        "tagType": "RACE",
+        "tagNameCn": "机器人",
+        "tagName": "机器人"
+       }
+      ],
+      "name": "2026-跨本体具身认知极限联合挑战赛",
+      "currency": 0,
+      "introduction": "本赛道聚焦具身智能从仿真训练走向多型号真机验证，探索机器人策略在不同本体和真实物理环境中的迁移能力。本次赛事是全球首个跨本体、跨平台、跨场景仿真+真机挑战赛。"
+     }
+    ],
+    "visualTab": 1,
+    "tagsList": [
+     {
+      "tagId": 177,
+      "tagType": "RACE",
+      "tagNameCn": "机器人",
+      "tagName": "机器人"
+     }
+    ],
+    "name": "2026-具身极限挑战赛",
+    "currency": 0,
+    "introduction": "随着具身智能加速走出实验室、进入真实产业场景，衡量机器人能力的标准正在发生根本变化：真正决定其能否规模化落地的，不再只是完成一项预设任务，而是能否理解真实世界、适应不同身体，并在复杂风险中保持安全与可靠。\n\n"
+   },
+   {
+    "raceId": 38,
+    "referUrl": "https://tianchi.aliyun.com/competition/entrance/532495",
+    "raceStartTime": "2026-07-17 00:00:00",
+    "bonus": 200000,
+    "highlightEn": "",
+    "teamCount": 1379,
+    "nameEn": "欧莱雅集团第二届美妆科技黑客松 - 用 AI 造点美",
+    "orgUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/38/WB02138154/9k83w0dhmh9mlstn.png",
+    "isSeries": 1,
+    "coverUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/38/WB02138154/xb6k7d83rqqt2x0k.jpg",
+    "highlight": "",
+    "raceEndTime": "2026-10-27 23:59:59",
+    "trackList": [
+     {
+      "raceId": 532503,
+      "referUrl": "",
+      "raceListStatus": 0,
+      "raceStartTime": "2026-07-17 00:00:00",
+      "bonus": 200000,
+      "highlightEn": "",
+      "teamCount": 625,
+      "nameEn": "",
+      "orgUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532503/WB02138154/o42wfyvosc2jeim7.png",
+      "isSeries": 0,
+      "coverUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532503/1390346237440146/wv377ovrnnaxc5m3.jpg",
+      "highlight": "用技术重新想象美妆，用创意解决真实行业问题",
+      "signupEndTime": "2026-10-20 23:59:59",
+      "raceEndTime": "2026-10-20 23:59:59",
+      "signupStartTime": "2026-07-17 00:00:00",
+      "visualTab": 1,
+      "tagsList": [
+       {
+        "tagId": 150,
+        "tagType": "RACE",
+        "tagNameCn": "多模态",
+        "tagName": "Multimodal"
+       },
+       {
+        "tagId": 154,
+        "tagType": "RACE",
+        "tagNameCn": "智能体",
+        "tagName": "Agent"
+       }
+      ],
+      "name": "欧莱雅美妆科技黑客松 - 赛题1 数据共情者 - 消费者的AI管家",
+      "currency": 0,
+      "introduction": "作为全球美妆科技创新的重要实践平台，2026 欧莱雅美妆科技黑客松汇聚全球青年创新力量，面向海内外高校在校学生开放报名。赛事聚焦人工智能与美妆产业融合创新，围绕真实业务场景设置挑战赛题，鼓励参赛团队运用 AI、多模态、智能交互等前沿技术，探索美妆行业的创新应用与未来体验。 在这里，创意不仅停留于概念，更有机会与产业需求深度连接。赛事希望发掘兼具技术创新力与商业应用价值的青年团队，为未来美妆科技的发展注入更多创新灵感与实践成果。"
+     },
+     {
+      "raceId": 532496,
+      "referUrl": "",
+      "raceListStatus": 0,
+      "raceStartTime": "2026-07-17 00:00:00",
+      "bonus": 200000,
+      "highlightEn": "",
+      "teamCount": 326,
+      "nameEn": "",
+      "orgUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532496/WB02138154/f8cae1fhobwzyvj5.png",
+      "isSeries": 0,
+      "coverUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532496/1390346237440146/8lntw2eu36x2vy50.jpg",
+      "highlight": "用技术重新想象美妆，用创意解决真实行业问题",
+      "signupEndTime": "2026-10-20 23:59:59",
+      "raceEndTime": "2026-10-20 23:59:59",
+      "signupStartTime": "2026-07-17 00:00:00",
+      "visualTab": 1,
+      "tagsList": [
+       {
+        "tagId": 150,
+        "tagType": "RACE",
+        "tagNameCn": "多模态",
+        "tagName": "Multimodal"
+       },
+       {
+        "tagId": 154,
+        "tagType": "RACE",
+        "tagNameCn": "智能体",
+        "tagName": "Agent"
+       }
+      ],
+      "name": "欧莱雅美妆科技黑客松 - 赛题2 信任守护师 - 创造者的AI卫士",
+      "currency": 0,
+      "introduction": "作为全球美妆科技创新的重要实践平台，2026 欧莱雅美妆科技黑客松汇聚全球青年创新力量，面向海内外高校在校学生开放报名。赛事聚焦人工智能与美妆产业融合创新，围绕真实业务场景设置挑战赛题，鼓励参赛团队运用 AI、多模态、智能交互等前沿技术，探索美妆行业的创新应用与未来体验。\n在这里，创意不仅停留于概念，更有机会与产业需求深度连接。赛事希望发掘兼具技术创新力与商业应用价值的青年团队，为未来美妆科技的发展注入更多创新灵感与实践成果。"
+     },
+     {
+      "raceId": 532497,
+      "referUrl": "",
+      "raceListStatus": 0,
+      "raceStartTime": "2026-07-17 00:00:00",
+      "bonus": 200000,
+      "highlightEn": "",
+      "teamCount": 428,
+      "nameEn": "",
+      "orgUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532497/WB02138154/inshs8lz2q47c2lh.png",
+      "isSeries": 0,
+      "coverUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532497/1390346237440146/vcqbrdrwdtwwtbvx.jpg",
+      "highlight": "用技术重新想象美妆，用创意解决真实行业问题",
+      "signupEndTime": "2026-10-20 23:59:59",
+      "raceEndTime": "2026-10-20 23:59:59",
+      "signupStartTime": "2026-07-17 00:00:00",
+      "visualTab": 1,
+      "tagsList": [
+       {
+        "tagId": 150,
+        "tagType": "RACE",
+        "tagNameCn": "多模态",
+        "tagName": "Multimodal"
+       },
+       {
+        "tagId": 154,
+        "tagType": "RACE",
+        "tagNameCn": "智能体",
+        "tagName": "Agent"
+       }
+      ],
+      "name": "欧莱雅美妆科技黑客松 - 赛题3 无界体验家 - 用爱(AI)让美触手可及",
+      "currency": 0,
+      "introduction": "作为全球美妆科技创新的重要实践平台，2026 欧莱雅美妆科技黑客松汇聚全球青年创新力量，面向海内外高校在校学生开放报名。赛事聚焦人工智能与美妆产业融合创新，围绕真实业务场景设置挑战赛题，鼓励参赛团队运用 AI、多模态、智能交互等前沿技术，探索美妆行业的创新应用与未来体验。\n在这里，创意不仅停留于概念，更有机会与产业需求深度连接。赛事希望发掘兼具技术创新力与商业应用价值的青年团队，为未来美妆科技的发展注入更多创新灵感与实践成果。"
+     }
+    ],
+    "visualTab": 1,
+    "tagsList": [],
+    "name": "欧莱雅第二届美妆科技黑客松 - 用 AI 造点美",
+    "currency": 0,
+    "introduction": "作为全球美妆科技创新的重要实践平台，2026 欧莱雅美妆黑客松汇聚全球青年创新力量，面向海内外高校在校学生开放报名。赛事聚焦人工智能与美妆产业融合创新，围绕真实业务场景设置挑战赛题，鼓励参赛团队运用 AI、多模态、智能交互等前沿技术，探索美妆行业的创新应用与未来体验。 在这里，创意不仅停留于概念，更有机会与产业需求深度连接。赛事希望发掘兼具技术创新力与商业应用价值的青年团队，为未来美妆科技的发展注入更多创新灵感与实践成果。"
+   },
+   {
+    "raceId": 532499,
+    "referUrl": "",
+    "raceListStatus": 4,
+    "raceStartTime": "2026-07-03 00:00:00",
+    "bonus": 200000,
+    "highlightEn": "",
+    "teamCount": 513,
+    "orgUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532499/WB02138154/pezhntqimli8mfmc.png",
+    "isSeries": 0,
+    "coverUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532499/WB02138154/eypouyte1inplojw.png",
+    "highlight": "",
+    "raceEndTime": "2026-09-28 23:59:59",
+    "visualTab": 1,
+    "tagsList": [
+     {
+      "tagId": 153,
+      "tagType": "RACE",
+      "tagNameCn": "计算机视觉‌",
+      "tagName": "CV"
+     }
+    ],
+    "name": "CSIG图像图形技术挑战赛-赛道一：生成式图像增强可控性挑战",
+    "currency": 0,
+    "introduction": "CSIG图像图形技术挑战赛是由中国图象图形学学会（CSIG）主办的系列赛事，旨在促进图像图形技术及相关产业的发展和应用，解决企业面临的技术难题，扩大企业宣传面，帮助企业吸引更多的优秀人才。为推动国内高等院校、科研院所在Camera及其相关领域在读学生的培养，选拔优秀人才，中国图象图形学学会、华为终端有限公司携手举办第三届\"Camera学术之星\"影像算法技术竞赛与研讨会。"
+   },
+   {
+    "raceId": 532500,
+    "referUrl": "",
+    "raceListStatus": 4,
+    "raceStartTime": "2026-07-01 00:00:00",
+    "bonus": 200000,
+    "highlightEn": "",
+    "teamCount": 401,
+    "orgUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532500/WB02138154/xvsnf0ilyhh5fkm7.png",
+    "isSeries": 0,
+    "coverUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532500/WB02138154/r8chxo6jj44y8y45.png",
+    "highlight": "",
+    "raceEndTime": "2026-09-28 23:59:59",
+    "visualTab": 1,
+    "tagsList": [
+     {
+      "tagId": 153,
+      "tagType": "RACE",
+      "tagNameCn": "计算机视觉‌",
+      "tagName": "CV"
+     }
+    ],
+    "name": "CSIG图像图形技术挑战赛-赛道二：生成式图像增强轻量模型设计挑战",
+    "currency": 0,
+    "introduction": "CSIG图像图形技术挑战赛是由中国图象图形学学会（CSIG）主办的系列赛事，旨在促进图像图形技术及相关产业的发展和应用，解决企业面临的技术难题，扩大企业宣传面，帮助企业吸引更多的优秀人才。为推动国内高等院校、科研院所在Camera及其相关领域在读学生的培养，选拔优秀人才，中国图象图形学学会、华为终端有限公司携手举办第三届\"Camera学术之星\"影像算法技术竞赛与研讨会。"
+   },
+   {
+    "raceId": 532482,
+    "referUrl": "",
+    "raceListStatus": 4,
+    "raceStartTime": "2026-05-13 00:00:00",
+    "bonus": 40000,
+    "highlightEn": "Large-scale Industrial Multi-view Dataset, 160 Product Categories, Zero-Shot Generalization Challenge, Dual Evaluation on Image Classification and Pixel Segmentation.",
+    "teamCount": 1107,
+    "orgUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532482/1987778207955901/lu1a89egxerifpg0.png;https://static.tianchi.aliyun.com/tianchi/race/images/prod/532482/1987778207955901/tkxz6hpx9iuc0llk.jpg",
+    "isSeries": 0,
+    "coverUrl": "https://static.tianchi.aliyun.com/tianchi/race/images/prod/532482/1648378487300537/5onwquvzohpfzp1o.png",
+    "highlight": "超大规模工业多视角数据集，160类产品全覆盖，零样本(Zero-Shot)极限泛化挑战，图像分类与像素分割双重评测。",
+    "raceEndTime": "2026-09-30 23:59:59",
+    "visualTab": 1,
+    "tagsList": [
+     {
+      "tagId": 153,
+      "tagType": "RACE",
+      "tagNameCn": "计算机视觉‌",
+      "tagName": "CV"
+     },
+     {
+      "tagId": 163,
+      "tagType": "RACE",
+      "tagNameCn": "工业制造",
+      "tagName": "Industrial manufacturing"
+     }
+    ],
+    "name": "第七届CSIG图像图形技术挑战赛—复杂工业场景异常检测算法挑战赛",
+    "currency": 0,
+    "introduction": "CSIG图像图形技术挑战赛是由中国图像图形学会（CSIG）主办的系列赛事。本赛道为第七届CSIG图像图形技术挑战赛，由荣旗科技、CSIG视觉检测专委会承办，赛道基于业界极具挑战性的真实工业多视角数据集 Real-IAD Variety（160类，近20万图）。重点考察大模型在面对超大规模类别的异常分类与像素级缺陷分割能力，以及在遭遇全新产品冷启动时，模型在未见类别（零样本/Zero-Shot）上的极限泛化水平。总奖金池4万元，冠军将角逐CSIG挑战赛年度总决赛。"
+   }
+  ],
+  "pageNum": 1,
+  "navigatePages": 0,
+  "total": 600,
+  "navigateFirstPage": 0,
+  "pages": 0,
+  "size": 0,
+  "isLastPage": false,
+  "hasPreviousPage": false,
+  "navigateLastPage": 0,
+  "isFirstPage": false
+ },
+ "code": "SUCCESS",
+ "message": null,
+ "traceId": "ab89d30c-99aa-4b34-978a-9f2396a60fd5",
+ "success": true,
+ "httpStatusCode": 200
+}

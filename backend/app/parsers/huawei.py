@@ -184,7 +184,7 @@ class HuaweiSource(BaseSource):
             try:
                 more = await page.evaluate(
                     """async (args) => {
-                    const u = args.url.replace(/([?&])limit=\d+/, '$1limit=50')
+                    const u = args.url.replace(/([?&])limit=\\d+/, '$1limit=50')
                                      + (args.url.includes('_=') ? '' : '&_=' + Date.now());
                     const r = await fetch(u, {
                         credentials: 'include',

@@ -36,19 +36,14 @@ def test_ccf_cert_cards() -> None:
     assert "CSP" in names, "认证页应含 CSP 项目卡片"
 
 
-def test_cacc_spa_shell_raises_source_error(monkeypatch: pytest.MonkeyPatch) -> None:
-    """cacc 官网是 SPA 空壳：解析为 0 条 → fetch 抛带原因的 SourceError（不裸崩）。"""
+def test_cacc_is_playwright_and_shell_parse_empty() -> None:
+    """cacc 已升级为 Playwright 渲染方案（2026-10，Lead）：method 应为 playwright，
+    且纯 HTML 空壳交给 parse() 仍应返回 0 条（渲染后无条目的 SourceError 分支由真实渲染覆盖）。"""
     from conftest import load_fixture
 
-    assert cacc.CaccSource().parse(load_fixture("cacc.html")) == []
-
-    async def fake_fetch_text(url: str, **_: object) -> str:
-        return load_fixture("cacc.html")
-
-    monkeypatch.setattr(cacc, "fetch_text", fake_fetch_text)
-    with pytest.raises(SourceError) as ei:
-        asyncio.run(cacc.CaccSource().fetch())
-    assert "SPA" in str(ei.value)
+    src = cacc.CaccSource()
+    assert src.method == "playwright"
+    assert src.parse(load_fixture("cacc.html")) == []
 
 
 def test_ccsp_and_ccf_cert_fetch_patched(monkeypatch: pytest.MonkeyPatch) -> None:
