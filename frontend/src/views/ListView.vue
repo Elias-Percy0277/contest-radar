@@ -214,6 +214,27 @@ async function submitManual() {
   }
 }
 
+// ---------- 手动深挖（POST /api/contests/{id}/deepdive） ----------
+const deepDivingId = ref(0)
+async function deepDiveRow(row: Contest) {
+  deepDivingId.value = row.id
+  try {
+    const updated = await api.deepDive(row.id)
+    const idx = items.value.findIndex((c) => c.id === row.id)
+    if (idx >= 0) items.value.splice(idx, 1, updated)
+    const changed = updated.deepdive_changed ?? []
+    const policy = updated.ai_policy ? AI_POLICY_TEXT[updated.ai_policy] : '未知'
+    const msg = changed.length
+      ? '深挖完成（更新 ' + changed.join('、') + '）：AI 政策=' + policy
+      : '深挖完成：详情页未发现新信息'
+    ElMessage.success(msg)
+  } catch (e) {
+    ElMessage.error('深挖失败：' + errText(e))
+  } finally {
+    deepDivingId.value = 0
+  }
+}
+
 function onRowUpdated() {
   load()
 }
@@ -289,9 +310,10 @@ function onRowUpdated() {
             <span v-else class="cr-text-secondary">—</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="190" fixed="right">
+        <el-table-column label="操作" width="240" fixed="right">
           <template #default="{ row }">
             <MyStatusButtons :contest="row" @updated="onRowUpdated" />
+            <el-button size="small" :loading="deepDivingId === row.id" @click="deepDiveRow(row)">深挖</el-button>
           </template>
         </el-table-column>
       </el-table>

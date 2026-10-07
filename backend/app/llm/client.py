@@ -66,6 +66,19 @@ def _parse_llm_json(text: str) -> dict[str, Any] | None:
     return data if isinstance(data, dict) else None
 
 
+class DeepDiveError(RuntimeError):
+    """深挖失败（用户主动触发的操作，不做静默降级，直接上抛中文原因）。"""
+
+
+_DEEP_SYSTEM_PROMPT = (
+    "你是竞赛信息抽取助手。根据给出的竞赛基本信息与详情页正文，抽取并只输出一个 JSON 对象："
+    '{"ai_policy":"allowed|forbidden|unknown","policy_evidence":"判定依据的原文片段或null",'
+    '"requirements":"参赛要求（学历/队伍/报名条件）或null","prize":"奖金奖品描述或null",'
+    '"eligibility":"参赛资格或null"}。'
+    "正文中没有的信息一律填 null，禁止编造；只输出 JSON，不要任何解释。"
+)
+
+
 class LLMClient:
     """DeepSeek 客户端（惰性创建，可复用）。任何失败自动降级为规则模式。"""
 
@@ -137,6 +150,50 @@ class LLMClient:
         except Exception as exc:  # noqa: BLE001 —— LLM 任何异常不得影响主流程
             print(f"[LLM] 调用失败，已按规则降级：{type(exc).__name__}: {exc}")
             return rule_enrich(contest)
+
+    async def deep_dive(self, contest: dict[str, Any], detail_text: str) -> dict[str, Any]:
+        """手动深挖：从详情页正文抽取 AI政策/参赛要求/奖金。
+
+        与 enrich 不同：这是用户主动触发的操作，失败上抛 DeepDiveError（路由转中文
+        错误提示），不做静默降级——点了按钮就该看到真实结果。
+        """
+        if not self.available:
+            raise DeepDiveError("未配置 LLM API Key，深挖功能不可用（backend/config.yaml）")
+        user_prompt = (
+            f"竞赛：{contest.get('title')}\n"
+            f"主办方：{contest.get('organizer') or '未知'}\n\n"
+            f"详情页正文（截断）：\n{detail_text[:8000]}"
+        )
+        try:
+            client = self._get_async_client()
+            completion = await client.chat.completions.create(
+                model=self.config.model or "deepseek-chat",
+                messages=[
+                    {"role": "system", "content": _DEEP_SYSTEM_PROMPT},
+                    {"role": "user", "content": user_prompt},
+                ],
+                temperature=0.1,
+                max_tokens=512,
+            )
+            data = _parse_llm_json(completion.choices[0].message.content or "")
+            if data is None:
+                raise DeepDiveError("模型输出无法解析为 JSON，请稍后重试")
+            out: dict[str, Any] = {}
+            ai = data.get("ai_policy")
+            if ai in ("allowed", "forbidden", "unknown"):
+                out["ai_policy"] = ai
+            for key in ("requirements", "prize", "eligibility"):
+                v = data.get(key)
+                if isinstance(v, str) and v.strip():
+                    out[key] = v.strip()[:500]
+            ev = data.get("policy_evidence")
+            if isinstance(ev, str) and ev.strip():
+                out["policy_evidence"] = ev.strip()[:200]
+            return out
+        except DeepDiveError:
+            raise
+        except Exception as exc:  # noqa: BLE001
+            raise DeepDiveError(f"LLM 调用失败：{type(exc).__name__}: {exc}") from exc
 
     async def aclose(self) -> None:
         """释放底层客户端。"""

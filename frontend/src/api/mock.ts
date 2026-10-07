@@ -529,6 +529,16 @@ async function request<T>(method: string, pathWithQuery: string, body?: unknown)
     return copy(contest) as T
   }
 
+  const dd = path.match(/^\/contests\/(\d+)\/deepdive$/)
+  if (m === 'POST' && dd) {
+    const contest = contests.find((c) => c.id === Number(dd[1]))
+    if (!contest) throw new Error('竞赛不存在：id=' + dd[1])
+    contest.ai_policy = 'allowed'
+    if (contest.tags.indexOf('已深挖') < 0) contest.tags = contest.tags.concat(['已深挖'])
+    contest.last_updated = new Date().toISOString()
+    return copy(Object.assign({}, contest, { deepdive_changed: ['ai_policy'] })) as T
+  }
+
   if (m === 'POST' && path === '/contests/manual') {
     const b = Object.assign({}, body) as Partial<ManualContestPayload>
     const title = (b.title ?? '').trim()

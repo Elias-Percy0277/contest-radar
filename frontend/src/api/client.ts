@@ -59,6 +59,10 @@ export const api = {
   addManualContest(payload: ManualContestPayload): Promise<Contest> {
     return request<Contest>('post', '/contests/manual', payload)
   },
+  /** POST /api/contests/{id}/deepdive（手动深挖：抽取 AI 政策/参赛要求/奖金） */
+  deepDive(id: number): Promise<Contest & { deepdive_changed?: string[] }> {
+    return request<Contest & { deepdive_changed?: string[] }>('post', '/contests/' + id + '/deepdive')
+  },
   /** POST /api/refresh（触发立即抓取） */
   refresh(): Promise<{ started: boolean }> {
     return request<{ started: boolean }>('post', '/refresh')

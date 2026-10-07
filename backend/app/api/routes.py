@@ -16,7 +16,10 @@ from app.config import get_config
 from app.db import get_db, get_session, meta_get
 from app.llm.rules import CATEGORIES
 from app.models import Contest, SourceHealth
+from app.fetcher.base import SourceError
+from app.llm.client import DeepDiveError, LLMClient
 from app.services.dedup import upsert_contest
+from app.services.deepdive import fetch_detail_text
 from app.services.status import derive_is_new, derive_status_of
 from app.utils.timeutil import iso_week_label, parse_date, today_local
 
@@ -154,6 +157,41 @@ async def add_manual_contest(request: Request, session: Session = Depends(get_db
         raise HTTPException(status_code=400, detail=f"补录失败：{exc}") from exc
     session.commit()
     return contest_dict(session, contest)
+
+
+# ---- 手动深挖 ----
+
+@router.post("/contests/{contest_id}/deepdive")
+async def deepdive_contest(contest_id: int, session: Session = Depends(get_db)) -> dict[str, Any]:
+    """深挖：抓该赛事详情页正文 → LLM 抽取 AI政策/参赛要求/奖金 → 更新条目并打"已深挖"标签。"""
+    contest = _get_or_404(session, contest_id)
+    try:
+        detail = await fetch_detail_text(contest.url)
+    except SourceError as exc:
+        raise HTTPException(status_code=502, detail=f"详情页抓取失败：{exc}") from exc
+    if not detail.strip():
+        raise HTTPException(status_code=502, detail="详情页正文为空，无法深挖")
+
+    client = LLMClient()
+    try:
+        patch = await client.deep_dive(contest.to_dict(), detail)
+    except DeepDiveError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    finally:
+        await client.aclose()
+
+    changed: list[str] = []
+    for key in ("ai_policy", "requirements", "prize", "eligibility"):
+        value = patch.get(key)
+        if value and value != "unknown" and getattr(contest, key) != value:
+            setattr(contest, key, value)
+            changed.append(key)
+    tags = list(contest.tags or [])
+    if "已深挖" not in tags:
+        tags.append("已深挖")
+        contest.tags = tags
+    session.commit()
+    return {**contest_dict(session, contest), "deepdive_changed": changed}
 
 
 # ---- 刷新 ----
