@@ -47,6 +47,21 @@ sources:
     params:
       url: "https://cacc.ccf.org.cn/"
       # 该站为 Vue SPA，2026-10 已升级为 Playwright 渲染方案。
+  - id: datafountain
+    name: DataFountain竞赛
+    method: http
+    parser: app.parsers.datafountain.DataFountainSource
+    enabled: true
+    params:
+      url: "https://www.datafountain.cn/competitions"
+  - id: saikr
+    name: 赛氪竞赛聚合
+    method: playwright
+    parser: app.parsers.saikr.SaikrSource
+    enabled: true
+    params:
+      url: "https://www.saikr.com/"
+      # keep_keywords: [自定义CS关键词]  # 可覆盖默认过滤口径
   - id: ccf_cert
     name: CCF认证
     method: http
