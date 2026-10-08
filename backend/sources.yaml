@@ -62,6 +62,20 @@ sources:
     params:
       url: "https://www.saikr.com/"
       # keep_keywords: [自定义CS关键词]  # 可覆盖默认过滤口径
+  - id: atcoder
+    name: AtCoder
+    method: http
+    parser: app.parsers.atcoder.AtCoderSource
+    enabled: true
+    params:
+      url: "https://atcoder.jp/contests"
+  - id: mcm
+    name: 全国大学生数学建模竞赛
+    method: http
+    parser: app.parsers.mcm.McmSource
+    enabled: true
+    params:
+      url: "https://www.mcm.edu.cn/"
   - id: ccf_cert
     name: CCF认证
     method: http
