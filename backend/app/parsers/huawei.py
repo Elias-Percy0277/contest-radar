@@ -132,7 +132,9 @@ class HuaweiSource(BaseSource):
                 try:
                     browser = await p.chromium.launch(headless=True)
                 except Exception as exc:  # 内核缺失 / 沙箱失败等
-                    raise SourceError(f"{INSTALL_HINT}（启动 chromium 失败：{exc}）") from exc
+                    from app.parsers._util import playwright_launch_error
+
+                    raise SourceError(playwright_launch_error(exc)) from exc
                 try:
                     page = await browser.new_page(user_agent=(
                         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "

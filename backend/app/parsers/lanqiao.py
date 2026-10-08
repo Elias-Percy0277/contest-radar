@@ -50,10 +50,9 @@ class LanqiaoSource(BaseSource):
                 try:
                     browser = await p.chromium.launch(headless=True)
                 except Exception as exc:
-                    raise SourceError(
-                        "蓝桥杯源需要 Playwright：先 pip install playwright && playwright install chromium"
-                        f"（启动 chromium 失败：{exc}）"
-                    ) from exc
+                    from app.parsers._util import playwright_launch_error
+
+                    raise SourceError(playwright_launch_error(exc)) from exc
                 try:
                     page = await browser.new_page(user_agent=_UA())
                     captured = await self._render_and_capture(page, url)

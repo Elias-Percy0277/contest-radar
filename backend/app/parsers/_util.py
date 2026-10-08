@@ -184,3 +184,20 @@ def clean_text(s: Any) -> str:
     import html as _html
 
     return _html.unescape(re.sub(r"\s+", " ", str(s))).strip()
+
+
+def playwright_launch_error(exc: Exception) -> str:
+    """把 chromium 启动失败翻译成人话：区分"内核缺失"与"其它启动失败"。
+
+    内核缺失的典型场景：多个虚拟环境装了不同版本的 playwright，它们共享
+    ~/Library/Caches/ms-playwright，新版本安装时会把旧版本内核当垃圾回收掉。
+    """
+    msg = str(exc)
+    if "Executable doesn't exist" in msg or "playwright install" in msg:
+        return (
+            "chromium 内核缺失：请在项目目录运行 "
+            "PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright "
+            ".venv/bin/python -m playwright install chromium（约150MB，一次性；"
+            "多个虚拟环境请保持 playwright 版本一致，避免内核被新版本回收）"
+        )
+    return f"chromium 启动失败：{msg[:200]}"

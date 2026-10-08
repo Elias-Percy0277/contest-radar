@@ -44,6 +44,7 @@ SPEC.md    技术规范与接口契约（开发者必读）
 - **杀毒软件拦截**：无头 Chromium 可能被误报，将 `.venv` 目录加入白名单即可。
 - **端口被占用**：修改 `backend/config.yaml` 的 `server.port`，并用同样端口手动启动：`.venv/bin/python -m uvicorn app.main:app --port <端口> --app-dir backend`。
 - **某源显示异常**：仪表盘底部"源健康"面板会显示每个源的上次成功时间与失败原因。
+- **Playwright 源报 "chromium 内核缺失"**：多因多个虚拟环境的 playwright 版本不一致——它们共享浏览器缓存目录，新版本安装时会把旧内核回收掉。在项目目录运行 `PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright .venv/bin/python -m playwright install chromium` 重装即可（约150MB）。
 
 ## 六、开发者
 

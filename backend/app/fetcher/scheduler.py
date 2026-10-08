@@ -36,6 +36,11 @@ async def _wait_for(coro: Any, timeout: float) -> Any:
     return await asyncio.wait_for(coro, timeout=timeout)
 
 
+# playwright 源的并发上限：chromium 实例内存占用高（每个数百 MB），
+# 与 HTTP 源的 concurrency 分开计数，避免一次刷新同时拉起多个无头浏览器。
+_PLAYWRIGHT_CONCURRENCY = 2
+
+
 @dataclass(slots=True)
 class SourceSpec:
     """sources.yaml 中单个源的配置。"""
@@ -128,8 +133,12 @@ class Scheduler:
         try:
             specs = [s for s in load_sources(self.sources_path) if s.enabled]
             semaphore = asyncio.Semaphore(max(1, self.config.fetch.concurrency))
+            pw_semaphore = asyncio.Semaphore(_PLAYWRIGHT_CONCURRENCY)
 
-            tasks = [self._fetch_one(spec, force, semaphore) for spec in specs]
+            tasks = [
+                self._fetch_one(spec, force, pw_semaphore if spec.method == "playwright" else semaphore)
+                for spec in specs
+            ]
             results = list(await asyncio.gather(*tasks))
 
             # 全部源结束后：LLM 加工新增/变更条目 + 保留清理

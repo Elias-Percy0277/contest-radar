@@ -48,7 +48,9 @@ class CaccSource(BaseSource):
         except Exception as exc:
             msg = str(exc).lower()
             if "chromium" in msg or "browser" in msg or "executable" in msg:
-                raise SourceError(f"{INSTALL_HINT}（启动 chromium 失败：{exc}）") from exc
+                from app.parsers._util import playwright_launch_error
+
+                raise SourceError(playwright_launch_error(exc)) from exc
             raise SourceError(f"CACC 官网渲染失败：{type(exc).__name__}: {exc}") from exc
 
         items = self.parse(html, base_url=url)

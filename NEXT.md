@@ -1,38 +1,30 @@
-# 续作清单（2026-10-08 凌晨收尾时的状态快照）
+# 续作清单（2026-10-08 上午更新）
 
-## 已完成（待最后一次验证）
+## ✅ 今晨已完成
 
-- **15 个信息源全部接入**：9 HTTP + 1 API + 5 Playwright（蓝桥杯/知乎黑客松/百度之星为新增 Playwright 源）
-- **手动深挖功能全链路**：列表页"深挖"按钮 → 后端抓详情页（HTTP 优先，SPA 回退渲染）→ LLM 抽取 AI政策/参赛要求/奖金 → 打"已深挖"标签
-- 测试：87 passed + 2 skipped（live 变体）；sources-crawler 单独跑过 32 全过含全部 live
-- dist 构建产物已纳入 git（Windows 克隆即用，无需 Node）
+- **15 源全量刷新 15/15 OK**，数据 89 条（蓝桥杯 27、天池 10、挑战杯 10、计设 5、CSP 5、CF 5 等）
+- **昨晚 Playwright 故障定位并修复**：根因是多虚拟环境 playwright 版本不一致，共享
+  ~/Library/Caches/ms-playwright 时旧内核（v1223）被新版本安装时回收。已重装内核，
+  并在 README 常见问题中记录此坑
+- **防复发改进 ×2**（昨晚 NEXT.md 遗留）：
+  1. 五个 Playwright 解析器统一用 _util.playwright_launch_error() 报错——
+     内核缺失/启动失败/包未装三种情况给出准确的人话提示
+  2. 调度器对 playwright 源单独限流（_PLAYWRIGHT_CONCURRENCY=2），与 HTTP 并发分开计数
+- 测试 87 passed + 2 skipped
 
-## ⚠️ 明早第一件事：复验 5 个 Playwright 源
+## 待办（按优先级）
 
-**现象**：01:15 的 15 源全量刷新中，5 个 Playwright 源全部报"需要 pip install playwright"，
-但 .venv 里 playwright 1.60.0 完好、import 正常、23:50 时同类刷新全部成功。
+1. **字节/腾讯赛事入口调研**：campus.bytedance.com 不存在；候选：juejin.cn/hackathon、
+   jobs.bytedance.com 校园页、cloud.tencent.com 大赛页——用 web_fetch 逐个试，找到稳定
+   官网后再写解析器
+2. **Windows 实机部署验证（M4 收官）**：git clone → start.bat → 依赖自动安装 → 15 源抓取
+   （重点验证：Chromium 镜像下载、CCF 系源的 curl 兜底在 Win10+ 的可用性）
+3. **深挖按钮真实体验**：用几天，收集"AI 政策抽取准确率"体感，不准的案例回流调提示词
+4. 知乎黑客松源当前 0 条在办（2026-03 场次已结束被过滤）——属正常，下届自动出现
 
-**最可能原因**：当时 sources-crawler 的后台 live 测试仍有 chromium 残留进程，多个 playwright
-源并发启动 chromium 时资源冲突，launch 失败被解析器误报为"未安装"。
+## 环境备忘
 
-**复验步骤**（安静环境）：
-```bash
-cd contest-radar && ./run.command   # 或手动起 uvicorn
-# 页面点"立即刷新"，或:
-curl -X POST http://127.0.0.1:8300/api/refresh
-```
-预期：15/15 源 OK；数据库新增 lanqiao(≈27)/zhihu_hackathon(1)/astar(3) 条
-（这三源 01:15 失败，数据尚未入库；其余源数据都在，共 61 条）。
-
-## 小改进（顺手做）
-
-1. **解析器错误信息修复**：playwright 启动失败（资源型）目前被误报为"需要 pip install"——
-   lanqiao/zhihu_hackathon/astar/huawei/ccf_cacc 五个解析器的异常分支要把 ImportError 与
-   launch 失败区分开（ImportError→装包提示；launch 失败→"chromium 启动失败，可能是并发资源不足"）
-2. 调度器可考虑对 playwright 源做串行化（Semaphore 单独限 1-2），避免同时 5 个 chromium
-
-## 之后的路线
-
-- 字节/腾讯赛事入口调研（campus.bytedance.com 不存在；试掘金/jobs.bytedance.com）
-- 深挖按钮真实体验反馈 → P1 收尾
-- Windows 实机部署验证（M4 收官）：git clone → start.bat
+- 本机两套 venv：.venv（运行/主开发，playwright 1.60.0）与 .venv-sources（爬虫开发）——
+  **升级任何一方的 playwright 前先同步另一方**，否则浏览器内核会被回收（今晨的坑）
+- GitHub Token（~30 天有效期）与 DeepSeek Key 都托管在 ~/.config/contest-radar/
+- dist 已入 git：改前端后记得重新构建再提交
