@@ -1,0 +1,14 @@
+.git
+.venv
+.venv-sources
+node_modules
+__pycache__
+*.pyc
+.pytest_cache
+backend/data/*
+!backend/data/.gitkeep
+backend/config.yaml
+frontend/node_modules
+.DS_Store
+NEXT.md
+docker-compose.yml

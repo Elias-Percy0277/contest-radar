@@ -14,7 +14,22 @@
 
 首次运行脚本会自动完成：创建虚拟环境 → 安装全部 Python 依赖（fastapi、uvicorn、sqlalchemy、httpx、beautifulsoup4、lxml、pyyaml、openai、playwright）→ 下载 Chromium 内核 → 复制配置文件。之后每次启动直接运行。
 
-## 二、快速开始
+## 二、快速开始（Docker，推荐）
+
+要求：已安装 Docker Desktop（Mac/Windows/Linux 均可）。首次使用：
+
+1. 复制配置：cp backend/config.example.yaml backend/config.yaml （填入 DeepSeek Key，可选）
+2. 构建并启动：docker compose up -d --build
+3. 浏览器打开 http://localhost:8300
+
+停止：docker compose down （数据保留在 cr-data 卷中，不丢失）
+
+要点：
+- 镜像内置 Python 3.11 + 全部依赖 + Chromium 内核；构建走清华 pip/apt 源与 npmmirror（国内友好），海外网络构建加 --build-arg BASE_REGISTRY=registry-1.docker.io
+- SQLite 数据在 cr-data 卷持久化；config.yaml 只读挂载，API Key 不进镜像
+- compose 默认 restart: unless-stopped（随 Docker Desktop 自启）；要严格“用完即关”就 docker compose stop，或把 restart 改为 no
+
+## 二·B、快速开始（本机直跑，无需 Docker）
 
 **Windows**：双击 `start.bat`
 **macOS**：双击 `run.command`（或在终端 `bash run.command`）

@@ -1,0 +1,28 @@
+# 竞赛雷达 ContestRadar —— Docker 运行
+# 首次使用：cp backend/config.example.yaml backend/config.yaml（填入 DeepSeek Key）
+# 启动：docker compose up -d --build   →  浏览器打开 http://localhost:8300
+# 停止：docker compose down（数据保留在 cr-data 卷中）
+
+services:
+  contest-radar:
+    build: .
+    image: contest-radar:latest
+    container_name: contest-radar
+    ports:
+      - "8300:8300"
+    volumes:
+      - cr-data:/app/backend/data          # SQLite 数据持久化
+      - ./backend/config.yaml:/app/backend/config.yaml:ro   # 本地配置（含 Key）
+    environment:
+      - TZ=Asia/Shanghai
+      - DISABLE_AUTO_OPEN=1                # 容器内无浏览器可开；宿主机自行访问
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://127.0.0.1:8300/api/refresh/status"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+volumes:
+  cr-data:

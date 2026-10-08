@@ -16,8 +16,9 @@
 
 1. ~~字节/腾讯赛事入口调研~~ **已结案（2026-10-08）**：两家均无稳定官方赛事页（走公众号/牛客/掘金动态发布）；
    已落地替代方案：DataFountain + 赛氪聚合两源上线（commit 8ecc32d），大厂散落赛事由聚合兜底
-2. **Windows 实机部署验证（M4 收官）**：git clone → start.bat → 依赖自动安装 → 15 源抓取
-   （重点验证：Chromium 镜像下载、CCF 系源的 curl 兜底在 Win10+ 的可用性）
+2. ~~Windows 实机部署验证~~ **路径已升级为 Docker（2026-10-08 Mac 端容器化验收通过：17/17 OK）**：
+   Windows 只需装 Docker Desktop → git clone → cp config → docker compose up -d --build，
+   无需本地 Python/Chromium（三件套：Dockerfile / docker-compose.yml / .dockerignore）
 3. **深挖按钮真实体验**：用几天，收集"AI 政策抽取准确率"体感，不准的案例回流调提示词
 4. 知乎黑客松源当前 0 条在办（2026-03 场次已结束被过滤）——属正常，下届自动出现
 5. 赛氪条目无日期（详情页才有）→ 状态 unknown，30 天无更新会被保留清理删除、下次抓取重新
