@@ -3,7 +3,7 @@ import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
-import { api } from '../api/client'
+import { api, csvUrl, mockMode } from '../api/client'
 import type { Contest, ManualContestPayload, SourceInfo } from '../types'
 import { useAppStore } from '../stores/app'
 import { AI_POLICY_TEXT, CATEGORIES, deadlineRelative, errText, formatDateTime, formatRange } from '../utils/format'
@@ -36,6 +36,7 @@ const filters = reactive({
   status: '',
   source_id: '',
   my_status: '',
+  ai_policy: '',
   q: '',
   sort: 'deadline' as string,
 })
@@ -59,6 +60,7 @@ const queryParams = computed(() => {
   const p: Record<string, string> = { sort: filters.sort }
   if (filters.category) p.category = filters.category
   if (filters.status) p.status = filters.status
+  if (filters.ai_policy) p.ai_policy = filters.ai_policy
   if (filters.source_id) p.source_id = filters.source_id
   if (filters.my_status) {
     p.my_status = filters.my_status
@@ -72,7 +74,7 @@ const queryParams = computed(() => {
 async function load() {
   loading.value = true
   try {
-    const resp = await api.getContests(queryParams.value)
+    const resp = await api.getContests({ ...queryParams.value, page: page.value, page_size: pageSize })
     items.value = resp.items
     total.value = resp.total
   } finally {
@@ -110,10 +112,36 @@ onMounted(() => {
     .catch(() => undefined)
 })
 
-const pagedItems = computed(() => {
-  const start = (page.value - 1) * pageSize
-  return items.value.slice(start, start + pageSize)
-})
+const AI_POLICY_OPTIONS = [
+  { value: '', label: 'AI政策全部' },
+  { value: 'allowed', label: '仅允许AI' },
+  { value: 'forbidden', label: '仅禁止AI' },
+  { value: 'unknown', label: '政策未知' },
+]
+
+// ---------- CSV 导出（与当前筛选一致） ----------
+function exportCsv() {
+  if (mockMode.value) {
+    ElMessage.info('Mock 演示模式不支持导出，连接后端后可用')
+    return
+  }
+  window.open(csvUrl(queryParams.value))
+}
+
+// ---------- 详情抽屉（点击行展开全部字段） ----------
+const detailVisible = ref(false)
+const detailRow = ref<Contest | null>(null)
+function openDetail(row: Contest) {
+  detailRow.value = row
+  detailVisible.value = true
+}
+async function deepDiveDetail() {
+  if (!detailRow.value) return
+  const id = detailRow.value.id
+  await deepDiveRow(detailRow.value)
+  const fresh = items.value.find((c) => c.id === id)
+  if (fresh) detailRow.value = fresh
+}
 
 // ---------- 立即刷新（POST /api/refresh + 轮询 /api/refresh/status） ----------
 const refreshing = computed(() => appStore.refreshing)
@@ -256,9 +284,13 @@ function onRowUpdated() {
         <el-select v-model="filters.my_status" style="width: 185px">
           <el-option v-for="o in MY_STATUS_OPTIONS" :key="o.value" :label="o.label" :value="o.value" />
         </el-select>
+        <el-select v-model="filters.ai_policy" style="width: 140px">
+          <el-option v-for="o in AI_POLICY_OPTIONS" :key="o.value" :label="o.label" :value="o.value" />
+        </el-select>
         <el-input v-model="filters.q" placeholder="搜索竞赛名称关键词" clearable style="width: 210px" />
         <div class="grow"></div>
         <el-button type="primary" :loading="refreshing" @click="refreshNow">{{ refreshing ? '抓取中…' : '立即刷新' }}</el-button>
+        <el-button @click="exportCsv">导出CSV</el-button>
         <el-button @click="openDialog">手动补录</el-button>
       </div>
       <div class="cr-toolbar" style="margin-bottom: 0">
@@ -274,7 +306,7 @@ function onRowUpdated() {
     </el-card>
 
     <el-card shadow="never" class="cr-card">
-      <el-table v-loading="loading" :data="pagedItems" size="default" row-key="id">
+      <el-table v-loading="loading" :data="items" size="default" row-key="id" style="cursor: pointer" @row-click="openDetail">
         <el-table-column label="竞赛" min-width="320">
           <template #default="{ row }">
             <div class="list-title">
@@ -318,9 +350,32 @@ function onRowUpdated() {
         </el-table-column>
       </el-table>
       <div class="pager-row">
-        <el-pagination v-model:current-page="page" :page-size="pageSize" :total="total" layout="total, prev, pager, next" background />
+        <el-pagination v-model:current-page="page" :page-size="pageSize" :total="total" layout="total, prev, pager, next" background @current-change="load" />
       </div>
     </el-card>
+
+    <el-drawer v-model="detailVisible" :title="detailRow ? detailRow.title : '竞赛详情'" size="460px">
+      <template v-if="detailRow">
+        <el-descriptions :column="1" border size="small">
+          <el-descriptions-item label="分类">{{ detailRow.category }}</el-descriptions-item>
+          <el-descriptions-item label="状态"><StatusTag :status="detailRow.status" /></el-descriptions-item>
+          <el-descriptions-item label="AI 政策">{{ AI_POLICY_TEXT[detailRow.ai_policy] }}</el-descriptions-item>
+          <el-descriptions-item label="主办方">{{ detailRow.organizer || '—' }}</el-descriptions-item>
+          <el-descriptions-item label="报名截止">{{ detailRow.reg_deadline || '—' }} {{ detailRow.reg_deadline ? deadlineRelative(detailRow.reg_deadline) : '' }}</el-descriptions-item>
+          <el-descriptions-item label="比赛时间">{{ formatRange(detailRow.contest_start, detailRow.contest_end) }}</el-descriptions-item>
+          <el-descriptions-item label="参赛要求">{{ detailRow.requirements || detailRow.eligibility || '—' }}</el-descriptions-item>
+          <el-descriptions-item label="奖金">{{ detailRow.prize || '—' }}</el-descriptions-item>
+          <el-descriptions-item label="标签">
+            <el-tag v-for="t in detailRow.tags" :key="t" size="small" style="margin-right: 4px">{{ t }}</el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item label="摘要">{{ detailRow.summary || '—' }}</el-descriptions-item>
+        </el-descriptions>
+        <div style="margin-top: 14px; display: flex; gap: 8px">
+          <el-button type="primary" size="small" :loading="deepDivingId === detailRow.id" @click="deepDiveDetail">深挖（AI政策/要求/日期）</el-button>
+          <el-button size="small" tag="a" :href="detailRow.url" target="_blank">打开原文</el-button>
+        </div>
+      </template>
+    </el-drawer>
 
     <el-dialog v-model="dialogVisible" title="手动补录竞赛" width="560px" @closed="resetManual">
       <el-form ref="formRef" :model="manualForm" :rules="manualRules" label-width="92px">

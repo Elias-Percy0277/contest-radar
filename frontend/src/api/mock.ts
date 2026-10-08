@@ -432,8 +432,10 @@ function queryContests(q: ContestQuery): ContestsResponse {
   const status = q.status ?? ''
   const myStatus = q.my_status ?? ''
   const sourceId = q.source_id ?? ''
+  const aiPolicy = q.ai_policy ?? ''
   const kw = (q.q ?? '').trim().toLowerCase()
   if (category) items = items.filter((c) => c.category === category)
+  if (aiPolicy) items = items.filter((c) => c.ai_policy === aiPolicy)
   if (status) items = items.filter((c) => c.status === status)
   if (myStatus) items = items.filter((c) => c.my_status === myStatus)
   if (sourceId) items = items.filter((c) => c.source_id === sourceId)
@@ -452,7 +454,16 @@ function queryContests(q: ContestQuery): ContestsResponse {
   } else if (sort === 'title') {
     items.sort((a, b) => a.title.localeCompare(b.title, 'zh'))
   }
-  return { items: items.map((c) => copy(c)), total: items.length }
+  const totalAll = items.length
+  const pageSize = q.page_size ?? 0
+  const pageNo = Math.max(1, q.page ?? 1)
+  if (pageSize > 0) items = items.slice((pageNo - 1) * pageSize, pageNo * pageSize)
+  return {
+    items: items.map((c) => copy(c)),
+    total: totalAll,
+    page: pageNo,
+    page_size: pageSize || totalAll,
+  }
 }
 
 function buildStats(): StatsResponse {
@@ -581,6 +592,23 @@ async function request<T>(method: string, pathWithQuery: string, body?: unknown)
   if (m === 'POST' && path === '/refresh') return startMockRefresh() as T
   if (m === 'GET' && path === '/refresh/status') return copy(refresh) as T
   if (m === 'GET' && path === '/sources') return sources.map((s) => copy(s)) as T
+  if (m === 'GET' && path === '/weekly-report') {
+    const t = todayStr()
+    const soon = contests.filter((c) => typeof c.reg_deadline === 'string' && c.reg_deadline >= t).slice(0, 5)
+    const lines = [
+      '（Mock 演示周报）本周重点：',
+      ...contests.slice(0, 3).map((c) => '- ' + c.title),
+      '',
+      '即将截止：',
+      ...(soon.length ? soon.map((c) => '- ' + c.title + '（' + c.reg_deadline + ' 截止）') : ['暂无']),
+    ]
+    return copy({
+      text: lines.join(String.fromCharCode(10)),
+      generated_at: new Date().toISOString(),
+      new_count: 3,
+      deadline_count: soon.length,
+    }) as T
+  }
   if (m === 'GET' && path === '/stats') return buildStats() as T
 
   throw new Error('Mock 未实现接口：' + m + ' ' + path)

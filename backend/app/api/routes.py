@@ -5,7 +5,7 @@
 """
 from __future__ import annotations
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Request
@@ -13,7 +13,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.config import get_config
-from app.db import get_db, get_session, meta_get
+from app.db import get_db, get_session, meta_get, meta_set
 from app.llm.rules import CATEGORIES
 from app.models import Contest, SourceHealth
 from app.fetcher.base import SourceError
@@ -21,7 +21,7 @@ from app.llm.client import DeepDiveError, LLMClient
 from app.services.dedup import upsert_contest
 from app.services.deepdive import fetch_detail_text
 from app.services.status import derive_is_new, derive_status_of
-from app.utils.timeutil import iso_week_label, parse_date, today_local
+from app.utils.timeutil import iso, iso_week_label, now_local, parse_date, today_local
 
 router = APIRouter(prefix="/api")
 
@@ -68,18 +68,19 @@ def _get_scheduler(request: Request) -> Any:
 
 # ---- 竞赛列表 ----
 
-@router.get("/contests")
-def list_contests(
+def _query_contests(
+    session: Session,
+    *,
     category: str | None = None,
     status: str | None = None,
     my_status: str | None = None,
     q: str | None = None,
     source_id: str | None = None,
+    ai_policy: str | None = None,
     hidden: int = 0,
     sort: str = "deadline",
-    session: Session = Depends(get_db),
-) -> dict[str, Any]:
-    """竞赛列表：默认排除 ignored；sort=deadline|new|title，默认 deadline（无截止排最后）。"""
+) -> list[dict[str, Any]]:
+    """列表公共查询：过滤 + 排序（列表端点与 CSV 导出共用）。"""
     rows = session.scalars(select(Contest)).all()
     items = [contest_dict(session, r) for r in rows]
 
@@ -93,6 +94,8 @@ def list_contests(
         items = [it for it in items if it["my_status"] == my_status]
     elif hidden != 1:
         items = [it for it in items if it["my_status"] != "ignored"]
+    if ai_policy:
+        items = [it for it in items if it["ai_policy"] == ai_policy]
     if q:
         needle = q.strip().lower()
         items = [
@@ -119,8 +122,77 @@ def list_contests(
             reverse=True,
         )
         items = with_deadline + no_deadline
+    return items
 
-    return {"items": items, "total": len(items)}
+
+@router.get("/contests")
+def list_contests(
+    category: str | None = None,
+    status: str | None = None,
+    my_status: str | None = None,
+    q: str | None = None,
+    source_id: str | None = None,
+    ai_policy: str | None = None,
+    hidden: int = 0,
+    sort: str = "deadline",
+    page: int = 1,
+    page_size: int = 0,
+    session: Session = Depends(get_db),
+) -> dict[str, Any]:
+    """竞赛列表：默认排除 ignored；ai_policy=allowed|forbidden|unknown；
+    sort=deadline|new|title；page_size>0 时后端分页（默认 0 全量，兼容旧调用）。"""
+    items = _query_contests(
+        session, category=category, status=status, my_status=my_status, q=q,
+        source_id=source_id, ai_policy=ai_policy, hidden=hidden, sort=sort,
+    )
+    total = len(items)
+    page = max(1, page)
+    if page_size and page_size > 0:
+        start = (page - 1) * page_size
+        items = items[start : start + page_size]
+    return {"items": items, "total": total, "page": page, "page_size": page_size or total}
+
+
+@router.get("/contests.csv")
+def contests_csv(
+    category: str | None = None,
+    status: str | None = None,
+    my_status: str | None = None,
+    q: str | None = None,
+    source_id: str | None = None,
+    ai_policy: str | None = None,
+    hidden: int = 0,
+    sort: str = "deadline",
+    session: Session = Depends(get_db),
+) -> Any:
+    """CSV 导出：与列表同参数（不分页），UTF-8-BOM，Excel 可直接打开。"""
+    import csv
+    import io
+
+    from fastapi.responses import Response
+
+    items = _query_contests(
+        session, category=category, status=status, my_status=my_status, q=q,
+        source_id=source_id, ai_policy=ai_policy, hidden=hidden, sort=sort,
+    )
+    ai_text = {"allowed": "允许", "forbidden": "禁止", "unknown": "未知"}
+    my_text = {"joined": "我要参加", "ignored": "已忽略", "none": ""}
+    st_text = {"registering": "报名中", "ongoing": "进行中", "ended": "已结束", "unknown": "未知"}
+    buf = io.StringIO()
+    w = csv.writer(buf)
+    w.writerow(["标题", "分类", "状态", "主办方", "报名截止", "比赛开始", "比赛结束", "AI政策", "我的状态", "链接", "摘要"])
+    for it in items:
+        w.writerow([
+            it["title"], it["category"], st_text.get(it["status"], it["status"]),
+            it["organizer"] or "", it["reg_deadline"] or "", it["contest_start"] or "",
+            it["contest_end"] or "", ai_text.get(it["ai_policy"], ""),
+            my_text.get(it["my_status"], ""), it["url"], (it["summary"] or "").replace("\\n", " "),
+        ])
+    return Response(
+        content="﻿" + buf.getvalue(),
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": "attachment; filename=contests.csv"},
+    )
 
 
 # ---- 我的日程标记 ----
@@ -136,6 +208,17 @@ async def set_my_status(contest_id: int, request: Request, session: Session = De
     contest = _get_or_404(session, contest_id)
     contest.my_status = value
     session.commit()
+    if value == "joined":
+        # 标记参加即自动深挖（后台静默执行，补 AI 政策/赛程日期）
+        import asyncio
+
+        tasks = getattr(request.app.state, "_bg_tasks", None)
+        if tasks is None:
+            tasks = set()
+            request.app.state._bg_tasks = tasks
+        task = asyncio.get_running_loop().create_task(_auto_deepdive(contest_id))
+        tasks.add(task)
+        task.add_done_callback(tasks.discard)
     return contest_dict(session, contest)
 
 
@@ -161,37 +244,62 @@ async def add_manual_contest(request: Request, session: Session = Depends(get_db
 
 # ---- 手动深挖 ----
 
+
+async def _deepdive_core(contest_id: int) -> tuple[dict[str, Any], list[str]]:
+    """深挖核心流程（路由与"标记参加自动深挖"共用）。抛 ValueError（中文原因）。"""
+    with get_session() as session:
+        contest = session.get(Contest, contest_id)
+        if contest is None:
+            raise ValueError("竞赛不存在")
+        try:
+            detail = await fetch_detail_text(contest.url)
+        except SourceError as exc:
+            raise ValueError(f"详情页抓取失败：{exc}") from exc
+        if not detail.strip():
+            raise ValueError("详情页正文为空，无法深挖")
+
+        client = LLMClient()
+        try:
+            patch = await client.deep_dive(contest.to_dict(), detail)
+        except DeepDiveError as exc:
+            raise ValueError(str(exc)) from exc
+        finally:
+            await client.aclose()
+
+        changed: list[str] = []
+        for key in ("ai_policy", "requirements", "prize", "eligibility",
+                    "reg_deadline", "contest_start", "contest_end"):
+            value = patch.get(key)
+            if value and value != "unknown" and getattr(contest, key) != value:
+                setattr(contest, key, value)
+                changed.append(key)
+        tags = list(contest.tags or [])
+        if "已深挖" not in tags:
+            tags.append("已深挖")
+            contest.tags = tags
+        session.commit()
+        return contest_dict(session, contest), changed
+
+
 @router.post("/contests/{contest_id}/deepdive")
-async def deepdive_contest(contest_id: int, session: Session = Depends(get_db)) -> dict[str, Any]:
-    """深挖：抓该赛事详情页正文 → LLM 抽取 AI政策/参赛要求/奖金 → 更新条目并打"已深挖"标签。"""
-    contest = _get_or_404(session, contest_id)
+async def deepdive_contest(contest_id: int) -> dict[str, Any]:
+    """深挖：抓详情页 → LLM 抽取 AI政策/参赛要求/奖金/赛程日期 → 更新并打"已深挖"标签。"""
     try:
-        detail = await fetch_detail_text(contest.url)
-    except SourceError as exc:
-        raise HTTPException(status_code=502, detail=f"详情页抓取失败：{exc}") from exc
-    if not detail.strip():
-        raise HTTPException(status_code=502, detail="详情页正文为空，无法深挖")
+        data, changed = await _deepdive_core(contest_id)
+    except ValueError as exc:
+        msg = str(exc)
+        code = 404 if msg == "竞赛不存在" else (503 if ("Key" in msg or "LLM" in msg) else 502)
+        raise HTTPException(status_code=code, detail=msg) from exc
+    return {**data, "deepdive_changed": changed}
 
-    client = LLMClient()
+
+async def _auto_deepdive(contest_id: int) -> None:
+    """标记"我要参加"后的自动深挖（后台任务）：失败只打日志，不打扰用户。"""
     try:
-        patch = await client.deep_dive(contest.to_dict(), detail)
-    except DeepDiveError as exc:
-        raise HTTPException(status_code=503, detail=str(exc)) from exc
-    finally:
-        await client.aclose()
-
-    changed: list[str] = []
-    for key in ("ai_policy", "requirements", "prize", "eligibility"):
-        value = patch.get(key)
-        if value and value != "unknown" and getattr(contest, key) != value:
-            setattr(contest, key, value)
-            changed.append(key)
-    tags = list(contest.tags or [])
-    if "已深挖" not in tags:
-        tags.append("已深挖")
-        contest.tags = tags
-    session.commit()
-    return {**contest_dict(session, contest), "deepdive_changed": changed}
+        _, changed = await _deepdive_core(contest_id)
+        print(f"[深挖] 自动深挖完成 id={contest_id} 更新字段: {changed or '无'}")
+    except Exception as exc:  # noqa: BLE001
+        print(f"[深挖] 自动深挖失败 id={contest_id}: {exc}")
 
 
 # ---- 刷新 ----
@@ -236,6 +344,74 @@ def list_sources(session: Session = Depends(get_db)) -> list[dict[str, Any]]:
     """源健康面板数据（含 enabled=false 的候选源，以 sources.yaml 同步结果为准）。"""
     rows = session.scalars(select(SourceHealth).order_by(SourceHealth.id)).all()
     return [r.to_dict() for r in rows]
+
+
+# ---- 周报 ----
+
+_LLM_REPORT_SYSTEM = (
+    "你是竞赛信息助理。根据给出的近7天新增赛事与未来14天报名截止清单，写一份给中国大学生的中文周报："
+    "第一行一句总览；然后本周新赛要点（最多5条，突出算法/AI/大厂赛事）；再截止提醒（按紧迫排序，标注剩余天数）；"
+    "最后一行一句行动建议。全文不超过350字，纯文本短行，不要 markdown 标记。"
+)
+
+
+@router.get("/weekly-report")
+async def weekly_report(force: int = 0, session: Session = Depends(get_db)) -> dict[str, Any]:
+    """周报：近7天新增 + 未来14天截止（我要参加的优先）→ LLM 总结；当日结果缓存。"""
+    import json as _json
+
+    cached = meta_get(session, "weekly_report")
+    if cached and not force:
+        try:
+            data = _json.loads(cached)
+            gen = datetime.fromisoformat(str(data.get("generated_at")))
+            if gen.date() == today_local():
+                return data
+        except Exception:
+            pass  # 缓存损坏则重新生成
+
+    rows = session.scalars(select(Contest)).all()
+    items = [contest_dict(session, r) for r in rows]
+    today = today_local()
+    new7 = [
+        it for it in items
+        if it["first_seen"] and (today - (parse_date(str(it["first_seen"])[:10]) or today)).days <= 7
+    ]
+    soon = [
+        it for it in items
+        if it["reg_deadline"] and 0 <= (parse_date(it["reg_deadline"]) - today).days <= 14
+    ]
+    soon.sort(key=lambda it: (it["my_status"] != "joined", it["reg_deadline"] or ""))
+
+    def _line(it: dict[str, Any]) -> str:
+        d = (parse_date(it["reg_deadline"]) - today).days if it["reg_deadline"] else None
+        tail = f"（截止还剩{d}天）" if d is not None else ""
+        star = "★" if it["my_status"] == "joined" else ""
+        return f"- {star}{it['title']}［{it['source_name']}］{tail}"
+
+    nl = "\n"
+    context = (
+        "近7天新增：" + nl + nl.join(_line(i) for i in new7[:20])
+        + nl + nl + "未来14天截止：" + nl + nl.join(_line(i) for i in soon[:20])
+    )
+    text = f"近7天新增 {len(new7)} 条赛事；未来14天有 {len(soon)} 项报名截止。" + nl + nl + context
+
+    client = LLMClient()
+    if client.available:
+        out = await client.chat_text(_LLM_REPORT_SYSTEM, context)
+        if out:
+            text = out
+        await client.aclose()
+
+    data = {
+        "text": text,
+        "generated_at": iso(now_local()),
+        "new_count": len(new7),
+        "deadline_count": len(soon),
+    }
+    meta_set(session, "weekly_report", _json.dumps(data, ensure_ascii=False))
+    session.commit()
+    return data
 
 
 # ---- 仪表盘统计 ----

@@ -12,6 +12,7 @@ import type {
   RefreshStatus,
   SourceInfo,
   StatsResponse,
+  WeeklyReport,
 } from '../types'
 
 const http = axios.create({ baseURL: '/api', timeout: 8000 })
@@ -79,4 +80,18 @@ export const api = {
   getStats(): Promise<StatsResponse> {
     return request<StatsResponse>('get', '/stats')
   },
+  /** GET /api/weekly-report（周报：LLM 总结近7天新增 + 未来14天截止；当日缓存） */
+  weeklyReport(force = false): Promise<WeeklyReport> {
+    return request<WeeklyReport>('get', force ? '/weekly-report?force=1' : '/weekly-report')
+  },
+}
+
+/** 构造 CSV 导出地址（真实后端模式下使用，与列表同筛选参数） */
+export function csvUrl(query: ContestQuery): string {
+  const s = new URLSearchParams()
+  Object.entries(query).forEach(([k, v]) => {
+    if (v !== undefined && v !== null && v !== '') s.append(k, String(v))
+  })
+  const qs = s.toString()
+  return '/api/contests.csv' + (qs ? '?' + qs : '')
 }

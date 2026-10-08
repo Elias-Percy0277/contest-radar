@@ -11,6 +11,7 @@
 from __future__ import annotations
 
 import json
+import re
 from typing import Any
 
 from app.config import LLMConfig, get_config
@@ -74,7 +75,9 @@ _DEEP_SYSTEM_PROMPT = (
     "你是竞赛信息抽取助手。根据给出的竞赛基本信息与详情页正文，抽取并只输出一个 JSON 对象："
     '{"ai_policy":"allowed|forbidden|unknown","policy_evidence":"判定依据的原文片段或null",'
     '"requirements":"参赛要求（学历/队伍/报名条件）或null","prize":"奖金奖品描述或null",'
-    '"eligibility":"参赛资格或null"}。'
+    '"eligibility":"参赛资格或null",'
+    '"reg_deadline":"报名截止日期YYYY-MM-DD或null","contest_start":"比赛开始日期YYYY-MM-DD或null",'
+    '"contest_end":"比赛结束日期YYYY-MM-DD或null"}。'
     "正文中没有的信息一律填 null，禁止编造；只输出 JSON，不要任何解释。"
 )
 
@@ -186,6 +189,11 @@ class LLMClient:
                 v = data.get(key)
                 if isinstance(v, str) and v.strip():
                     out[key] = v.strip()[:500]
+
+            for key in ("reg_deadline", "contest_start", "contest_end"):
+                v = data.get(key)
+                if isinstance(v, str) and re.match(r"^20\d{2}-\d{2}-\d{2}$", v.strip()):
+                    out[key] = v.strip()
             ev = data.get("policy_evidence")
             if isinstance(ev, str) and ev.strip():
                 out["policy_evidence"] = ev.strip()[:200]
@@ -194,6 +202,25 @@ class LLMClient:
             raise
         except Exception as exc:  # noqa: BLE001
             raise DeepDiveError(f"LLM 调用失败：{type(exc).__name__}: {exc}") from exc
+
+    async def chat_text(self, system: str, user: str, *, temperature: float = 0.4, max_tokens: int = 600) -> str:
+        """一次性文本对话（周报等场景）；未配置 Key 或失败返回空串，调用方自行兜底。"""
+        if not self.available:
+            return ""
+        try:
+            client = self._get_async_client()
+            completion = await client.chat.completions.create(
+                model=self.config.model or "deepseek-chat",
+                messages=[
+                    {"role": "system", "content": system},
+                    {"role": "user", "content": user},
+                ],
+                temperature=temperature,
+                max_tokens=max_tokens,
+            )
+            return (completion.choices[0].message.content or "").strip()
+        except Exception:  # noqa: BLE001
+            return ""
 
     async def aclose(self) -> None:
         """释放底层客户端。"""

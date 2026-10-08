@@ -42,6 +42,15 @@ export interface Contest {
 export interface ContestsResponse {
   items: Contest[]
   total: number
+  page?: number
+  page_size?: number
+}
+
+export interface WeeklyReport {
+  text: string
+  generated_at: string
+  new_count: number
+  deadline_count: number
 }
 
 export interface SourceInfo {
@@ -82,8 +91,11 @@ export interface ContestQuery {
   my_status?: string
   q?: string
   source_id?: string
+  ai_policy?: string
   hidden?: string
   sort?: string
+  page?: number
+  page_size?: number
 }
 
 /** 手动补录请求体：ContestRaw 子集（title/url/category 必填，SPEC §4） */

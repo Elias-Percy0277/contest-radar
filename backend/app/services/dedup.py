@@ -8,6 +8,7 @@
 """
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from sqlalchemy import select
@@ -38,6 +39,14 @@ def _is_empty(field: str, value: Any) -> bool:
     if field == "tags":
         return not value
     return value is None or (isinstance(value, str) and value.strip() == "")
+
+
+_TITLE_NOISE = re.compile(r"第[0-9一二三四五六七八九十百千]+[届次期轮]|20\d{2}年?|[\s\W_]+")
+
+
+def normalize_title(title: str) -> str:
+    """标题归一化（跨源合并用）：去届次/年份/空白与全部标点，仅保留文字与数字。"""
+    return _TITLE_NOISE.sub("", title or "").lower()
 
 
 def sanitize_raw(raw: dict[str, Any]) -> dict[str, Any]:
@@ -89,6 +98,23 @@ def upsert_contest(
     ).first()
 
     if existing is None:
+        # --- 跨源合并：不同源、标题归一化后完全一致 → 视为同一赛事并入已有条目 ---
+        nt = normalize_title(title)
+        if nt:
+            for cand in session.scalars(select(Contest).where(Contest.source_id != source_id)):
+                if normalize_title(cand.title or "") != nt:
+                    continue
+                tags = list(cand.tags or [])
+                merge_tag = f"多源:{source_name or source_id}"
+                if merge_tag not in tags:
+                    tags.append(merge_tag)
+                    cand.tags = tags
+                for field in ("reg_deadline", "contest_start", "contest_end", "organizer", "prize"):
+                    v = clean.get(field)
+                    if v and not getattr(cand, field):
+                        setattr(cand, field, v)
+                cand.last_updated = ts
+                return cand, False, False
         contest = Contest(
             source_id=source_id,
             source_name=source_name,

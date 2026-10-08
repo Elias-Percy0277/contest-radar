@@ -135,13 +135,39 @@ def test_missing_title_or_url_raises() -> None:
 
 
 def test_different_canonical_inserts_second_row() -> None:
+    # 标题不同（不同赛事）→ 独立两行
     with get_session() as session:
         upsert_contest(session, _raw(), "ccf_csp", "CCF CSP认证")
         session.commit()
     with get_session() as session:
         _, is_new, _ = upsert_contest(
-            session, _raw(url="https://race.example.com/csp2"), "nowcoder", "牛客"
+            session,
+            _raw(url="https://race.example.com/csp2", title="另一个毫不相干的比赛"),
+            "nowcoder",
+            "牛客",
         )
         session.commit()
     assert is_new is True
     assert len(_all_rows()) == 2
+
+
+def test_cross_source_merge_same_title() -> None:
+    # 跨源合并：不同源 + 标题归一化后一致 → 并入已有条目，打"多源:"标签
+    with get_session() as session:
+        upsert_contest(session, _raw(), "ccf_csp", "CCF CSP认证")
+        session.commit()
+    with get_session() as session:
+        row, is_new, changed = upsert_contest(
+            session, _raw(url="https://race.example.com/csp2"), "nowcoder", "牛客"
+        )
+        session.commit()
+    assert is_new is False and changed is False
+    assert len(_all_rows()) == 1
+    assert any(str(t).startswith("多源:牛客") for t in (row.tags or []))
+
+
+def test_normalize_title_strips_noise() -> None:
+    from app.services.dedup import normalize_title
+
+    assert normalize_title("第18届 蓝桥杯大赛（2026）") == normalize_title("第十八届蓝桥杯大赛")
+    assert normalize_title("2026年高教社杯全国大学生数学建模竞赛") != normalize_title("2026年全国大学生电工数学建模竞赛")

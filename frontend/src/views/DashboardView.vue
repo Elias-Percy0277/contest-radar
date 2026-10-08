@@ -22,6 +22,23 @@ async function load() {
 }
 onMounted(load)
 
+// ---------- 本周周报 ----------
+const reportVisible = ref(false)
+const reportLoading = ref(false)
+const reportText = ref('')
+const reportTime = ref('')
+async function openReport() {
+  reportVisible.value = true
+  reportLoading.value = true
+  try {
+    const r = await api.weeklyReport()
+    reportText.value = r.text
+    reportTime.value = r.generated_at
+  } finally {
+    reportLoading.value = false
+  }
+}
+
 const registeringCount = computed(() => (stats.value && stats.value.by_status ? stats.value.by_status.registering ?? 0 : 0))
 const joinedCount = computed(() => (stats.value ? stats.value.joined_count : 0))
 const weeklyNewCount = computed(() => {
@@ -107,6 +124,10 @@ function onUpdated() {
       </el-col>
     </el-row>
 
+    <div style="display: flex; justify-content: flex-end; margin: 2px 0 12px">
+      <el-button size="small" @click="openReport">本周周报（LLM）</el-button>
+    </div>
+
     <el-row :gutter="16">
       <el-col :span="14">
         <el-card shadow="never" class="cr-card">
@@ -175,5 +196,15 @@ function onUpdated() {
         上次成功刷新：{{ formatDateTime(stats.last_refresh) }}
       </div>
     </el-card>
+
+    <el-dialog v-model="reportVisible" title="本周竞赛周报" width="620px">
+      <div v-loading="reportLoading" style="min-height: 120px">
+        <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; line-height: 1.8">{{ reportText }}</pre>
+      </div>
+      <template #footer>
+        <span class="cr-text-secondary" style="margin-right: 12px">生成于 {{ formatDateTime(reportTime) }}</span>
+        <el-button size="small" :loading="reportLoading" @click="openReport">重新生成</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
